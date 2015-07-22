@@ -19,8 +19,8 @@ type MainEvents =
     | Edit of string
 
 type MainWindow = XAML<"MainWindow.xaml", true>   
-type MainView(mw : MainWindow) = 
-    inherit View<MainEvents, Window, MainModel>(mw.Root)
+type MainView(mw : MainWindow, m) = 
+    inherit View<MainEvents, Window, MainModel>(mw.Root, m)
     
     override this.EventStreams = 
         [ mw.buttonUp.Click |> Observable.mapTo Up
@@ -48,7 +48,7 @@ type MainController() =
             | Edit str -> Sync(edit str)
 
 let run(app:Application) =
-    let v = MainView(MainWindow())
-    let mvc = MVC(MainModel(), v, MainController())
+    let v = MainView(MainWindow(), MainModel())
+    let mvc = MVC(v, MainController())
     use eventloop = mvc.Start()
     app.Run(window = v.Root)

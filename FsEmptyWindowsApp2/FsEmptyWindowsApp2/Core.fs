@@ -34,24 +34,22 @@ module Observable =
 [<AbstractClass>]
 type IView<'Event>() =
     member val composeViewEvent = Event<IView<'Event>>()
-    member this.ComposeView<'SubView,'SubModel when 'SubView :> IViewWithModel<'Event, 'SubModel>>(v:'SubView) (x:'SubModel): 'SubView =
-        v.SetDataContext x
-        v.SetBindings x
+    member this.ComposeView<'SubView,'SubModel when 'SubView :> IViewWithModel<'Event, 'SubModel>>(v:'SubView): 'SubView =
+        v.SetBindings v.Model
         this.composeViewEvent.Trigger v; v
     abstract EventStreams : IObservable<'Event> list
     member this.Events = this.EventStreams.Merge()
-    abstract SetDataContext : obj -> unit
 and 
     [<AbstractClass>]
-    IViewWithModel<'Event, 'Model>() =
+    IViewWithModel<'Event, 'Model>(m:'Model) =
     inherit IView<'Event>()
+    member val Model:'Model = m
     abstract SetBindings : 'Model -> unit
     
 [<AbstractClass>]
-type View<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt:'Element) =
-    inherit IViewWithModel<'Event, 'Model>()
+type View<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt:'Element, m:'Model) =
+    inherit IViewWithModel<'Event, 'Model>(m)
     member this.Root = elt
-    override this.SetDataContext x = this.Root.DataContext <- x
 
 
 type EventHandler<'Model> = 
@@ -62,7 +60,7 @@ type IController<'Event, 'Model> =
     abstract InitModel : 'Model -> unit
     abstract Dispatcher : ('Event -> EventHandler<'Model>)
 
-type MVC<'Model,'Event,'Element when 'Element :> Window>(m:'Model, v:View<'Event, 'Element, 'Model>, c:IController<'Event,'Model>) =
+type MVC<'Model,'Event,'Element when 'Element :> Window>(v:View<'Event, 'Element, 'Model>, c:IController<'Event,'Model>) =
     let hub = new Subject<'Event>()
     let error(why, event) = tracefn "%A %A" why event
     do
@@ -72,17 +70,16 @@ type MVC<'Model,'Event,'Element when 'Element :> Window>(m:'Model, v:View<'Event
         v.composeViewEvent.Publish |> Observable.subscribe subscribe |> ignore
     member this.Create() = ()
     member this.Start() =
-        v.Root.DataContext <- m
-        v.SetBindings(m)
+        v.SetBindings(v.Model)
         v.Events.Subscribe hub |> ignore
         Observer.Create(fun e ->
             match c.Dispatcher e with
             | Sync eventHandler ->
-                try eventHandler m 
+                try eventHandler v.Model
                 with why -> error(why, e)
             | Async eventHandler -> 
                 Async.StartWithContinuations(
-                    computation = eventHandler m, 
+                    computation = eventHandler v.Model, 
                     continuation = ignore, 
                     exceptionContinuation = (fun why -> () (*error(why, event)*)),
                     cancellationContinuation = ignore))
