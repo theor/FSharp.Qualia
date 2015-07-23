@@ -34,16 +34,19 @@ type TodoListWindow = XAML< "TodoList.xaml", true >
 
 type TodoListView(mw : TodoListWindow, m) as this = 
     inherit View<TodoListEvents, Window, TodoListModel>(mw.Root, m)
-    let link (items:ItemCollection) (e:NotifyCollectionChangedEventArgs) =
+    let link (items:ItemsControl) (e:NotifyCollectionChangedEventArgs) =
         let add (x:ItemModel) =
             let ctrl = this.ComposeView (Item.View(x))
-            items.Add (ctrl.Root) |> ignore
+            items.Items.Add (ctrl.Root) |> ignore
+            
+        let remove (x:ItemModel) = ()
         match e.Action with
         | NotifyCollectionChangedAction.Add x -> e.NewItems |> Seq.cast<ItemModel> |> Seq.iter add
+        | NotifyCollectionChangedAction.Remove -> e.OldItems |> Seq.cast<ItemModel> |> Seq.iter remove
         | _ -> ()
     override this.EventStreams = [ mw.buttonAdd.Click |> Observable.mapTo Add ]
     override this.SetBindings(m : TodoListModel) = 
-        m.Items.CollectionChanged.Add (link mw.list.Items)
+        m.Items.CollectionChanged.Add (link mw.list)
 
 type TodoListController() = 
     let add (m : TodoListModel) = m.Items.Add(ItemModel(sprintf "Item %i" m.Items.Count))
