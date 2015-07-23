@@ -29,7 +29,10 @@ module Item =
         override this.EventStreams =
             [ this.Root.buttonDelete.Click |> Observable.mapTo (Delete this.Model)
               this.Root.checkDone.Checked |> Observable.mapTo (Checked(this.Root.checkDone.IsChecked.GetValueOrDefault(), this.Model))]
-        override this.SetBindings(m : ItemModel) = m.Text.Add(fun t -> this.Root.labelText.Content <- t)
+        override this.SetBindings(m : ItemModel) =
+            m.Text.Add(fun t -> this.Root.labelText.Content <- t)
+            m.Done.Add(fun d -> this.Root.checkDone.IsChecked <- System.Nullable d)
+
 
 type TodoListModel() = 
     member val Items = new ObservableCollection<ItemModel>()
@@ -37,26 +40,10 @@ type TodoListModel() =
 type TodoListWindow = XAML< "TodoList.xaml", true >
 
 type TodoListView(mw : TodoListWindow, m) as this = 
-    inherit View<TodoListEvents, Window, TodoListModel>(mw.Root, m)
-    let link (items:ItemsControl) (e:NotifyCollectionChangedEventArgs) =
-        let it = mw.Root.FindResource "ViewTemplate"
-        items.ItemTemplate <- it :?> DataTemplate
-        let add (x:ItemModel) =
-            let ctrl = this.ComposeView (Item.View(x))
-            items.Items.Add (ctrl) |> ignore
-            
-        let remove (x:ItemModel) =
-            let iv = items.Items |> Seq.cast<Item.View> |> Seq.tryFindIndex (fun i -> i.Model = x)
-            match iv with
-            | Some index -> items.Items.RemoveAt index
-            | None -> ()
-        match e.Action with
-        | NotifyCollectionChangedAction.Add x -> e.NewItems |> Seq.cast<ItemModel> |> Seq.iter add
-        | NotifyCollectionChangedAction.Remove -> e.OldItems |> Seq.cast<ItemModel> |> Seq.iter remove
-        | _ -> ()
+    inherit CollectionView<TodoListEvents, Window, TodoListModel>(mw.Root, m)
     override this.EventStreams = [ mw.buttonAdd.Click |> Observable.mapTo Add ]
     override this.SetBindings(m : TodoListModel) = 
-        m.Items.CollectionChanged.Add (link mw.list)
+        m.Items |> this.linkCollection mw.list (fun x -> Item.View(x))
 
 type TodoListController() = 
     let add (m : TodoListModel) = m.Items.Add(ItemModel(sprintf "Item %i" m.Items.Count, false))

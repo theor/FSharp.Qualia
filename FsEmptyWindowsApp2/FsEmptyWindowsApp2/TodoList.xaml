@@ -8,9 +8,11 @@
         mc:Ignorable="d"
         Title="TodoList" Height="500" Width="800" >
     <Window.Resources>
-        <DataTemplate x:Key="ViewTemplate">
-            <ContentPresenter HorizontalAlignment="Stretch" Content="{Binding Root}"/>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="App.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
