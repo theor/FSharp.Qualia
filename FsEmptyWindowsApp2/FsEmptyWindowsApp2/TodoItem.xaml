@@ -6,12 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         x:Name="ItemRoot" 
         mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions >
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="60"/>
-        </Grid.ColumnDefinitions>
-        <Label x:Name="labelText"/>
-        <Button x:Name="buttonDelete" Content="X" Grid.Column="1"/>
-    </Grid>
+    <DockPanel LastChildFill="True">
+        <CheckBox x:Name="checkDone" DockPanel.Dock="Left"/>
+        <Button x:Name="buttonDelete" Content="X" DockPanel.Dock="Right"/>
+        <Label x:Name="labelText" />
+    </DockPanel>
 </UserControl>

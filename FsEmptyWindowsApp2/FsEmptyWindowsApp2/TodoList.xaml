@@ -7,8 +7,17 @@
         x:Name="WindowRoot" 
         mc:Ignorable="d"
         Title="TodoList" Height="500" Width="800" >
-    <StackPanel x:Name="WindowGrid">
+    <Window.Resources>
+        <DataTemplate x:Key="ViewTemplate">
+            <ContentPresenter HorizontalAlignment="Stretch" Content="{Binding Root}"/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Button x:Name="buttonAdd">Add</Button>
-        <ListBox x:Name="list"/>
-    </StackPanel>
+        <ListBox x:Name="list" Grid.Row="1" HorizontalAlignment="Stretch"/>
+    </Grid>
 </Window>

@@ -70,6 +70,7 @@ type MVC<'Model,'Event,'Element when 'Element :> Window>(v:View<'Event, 'Element
         v.composeViewEvent.Publish |> Observable.subscribe subscribe |> ignore
     member this.Create() = ()
     member this.Start() =
+        c.InitModel v.Model
         v.SetBindings(v.Model)
         v.Events.Subscribe hub |> ignore
         Observer.Create(fun e ->
