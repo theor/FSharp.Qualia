@@ -68,7 +68,7 @@ type CollectionView<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(
         let ctrl = creator x |> this.ComposeView
         items.Items.Add(ctrl) |> ignore
     
-    member this.link<'ItemModel, 'ItemView
+    member private this.link<'ItemModel, 'ItemView
         when 'ItemView :> IViewWithModel<'Event, 'ItemModel>
         and 'ItemModel : equality>
            (items : ItemsControl) 
