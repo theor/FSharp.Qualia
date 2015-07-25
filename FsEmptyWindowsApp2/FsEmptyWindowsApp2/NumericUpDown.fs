@@ -3,7 +3,6 @@
 open System
 open System.Windows
 open System.Reactive.Linq
-open Reactive.Bindings
 open System.Windows.Threading
 open System.Threading
 open System.Reactive

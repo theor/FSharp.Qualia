@@ -16,6 +16,39 @@ let traceid (x : 'a) =
     tracefn "%A" x
     x
 
+
+let isAddOrRemove (x:NotifyCollectionChangedEventArgs) =
+    x.Action = NotifyCollectionChangedAction.Add || x.Action = NotifyCollectionChangedAction.Remove
+type CollectionChanged<'a> = Add of 'a seq | Remove of 'a seq
+let toAddOrRemove<'a> (x:NotifyCollectionChangedEventArgs) =
+    match x.Action with
+    | NotifyCollectionChangedAction.Add -> Add (x.NewItems |> Seq.cast<'a>) |> Some
+    | NotifyCollectionChangedAction.Remove -> Remove (x.OldItems |> Seq.cast<'a>) |> Some
+    | _ -> None
+type ReactiveProperty<'a>(init:'a) =
+    let mutable value = init
+    do
+        tracefn "NEW PROP %A" typedefof<'a>
+    member val private sub = new BehaviorSubject<'a>(init)
+    interface IObservable<'a> with
+        member x.Subscribe(observer: IObserver<'a>): IDisposable = 
+            x.sub.Subscribe observer
+        
+    member x.Value
+        with get() = value
+        and set(v) = value <- v; x.sub.OnNext v
+
+    override x.ToString() = sprintf "%A" x.Value
+
+
+    new(source:IObservable<'a>, init:'a) as x =
+        ReactiveProperty(init)
+        then
+            source |> Observable.map (traceid)
+                   |> Observable.add (fun v -> x.Value <- v)
+        
+let Prop (init:'a) = new ReactiveProperty<'a>(init)
+
 [<RequireQualifiedAccess>]
 module internal Observer = 
     open System.Reactive
@@ -37,6 +70,10 @@ module internal Observer =
 [<RequireQualifiedAccess>]
 module Observable = 
     let mapTo value = Observable.map (fun _ -> value)
+    let toProperty (init:'a) (source:IObservable<'a>) =
+        new ReactiveProperty<'a>(source, init)
+
+let inline (-->) (o:IObservable<_>) (value) = o |> Observable.mapTo value
 
 [<AbstractClass>]
 type IView<'Event>() = 
