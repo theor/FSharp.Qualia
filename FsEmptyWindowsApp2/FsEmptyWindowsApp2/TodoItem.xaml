@@ -8,7 +8,7 @@
         mc:Ignorable="d">
     <DockPanel LastChildFill="True">
         <CheckBox x:Name="checkDone" DockPanel.Dock="Left"/>
-        <Button x:Name="buttonDelete" Content="X" DockPanel.Dock="Right"/>
+        <Button x:Name="buttonDelete" Content="X" DockPanel.Dock="Right" Visibility="Collapsed"/>
         <Label x:Name="labelText" />
     </DockPanel>
 </UserControl>

@@ -21,9 +21,9 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="buttonAdd">Add</Button>
             <Button x:Name="buttonCheckAll">CheckAll</Button>
             <Button x:Name="buttonUncheckAll">Uncheck</Button>
+            <TextBox x:Name="tbNewItem" Width="200"/>
         </StackPanel>
         <ListBox x:Name="list" Grid.Row="1" HorizontalAlignment="Stretch"/>
         <Label x:Name="labelSummary" Grid.Row="2"/>
