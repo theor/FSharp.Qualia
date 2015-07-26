@@ -70,8 +70,34 @@ type TodoListModel() =
 
 type TodoListWindow = XAML< "TodoList.xaml", true >
 
-type TodoListView(mw : TodoListWindow, m) = 
+
+
+open System.Windows.Data
+type ViewConverter<'Event, 'Model, 'View, 'Element when 'View :> Defs.View<'Event, 'Element, 'Model> and 'Element :> FrameworkElement>(ff:('View -> 'View), f: 'Model -> 'View) =
+    interface System.Windows.Data.IValueConverter with
+        member x.Convert(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
+            let v = f (value :?> 'Model)
+            let v2 = ff v
+            v2.Root :> obj       
+        member x.ConvertBack(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
+            failwith "Not implemented yet"
+
+type TodoListView(mw : TodoListWindow, m) as this = 
     inherit CollectionView<TodoListEvents, Window, TodoListModel>(mw.Root, m)
+
+    do
+        let l = mw.list2
+        let it = DataTemplate(typedefof<ItemModel>)
+        let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
+        let b = Binding(".")
+        let conv =  ViewConverter(this.ComposeView, fun m -> Item.View(m))
+        b.Converter <- conv
+        fef.SetBinding(ContentPresenter.ContentProperty, b)
+
+        it.VisualTree <- fef
+        l.ItemTemplate <- it
+        
+        l.ItemsSource <- m.Items
     
     override this.EventStreams = 
         [ mw.buttonCheckAll.Click --> CheckAll
