@@ -9,6 +9,7 @@ open System.Reactive.Subjects
 open System.Windows.Controls
 open System.Collections.ObjectModel
 open System.Collections.Specialized
+open System.Collections.Generic
 
 let tracefn format = Printf.kprintf (System.Diagnostics.Trace.WriteLine) format
 
@@ -16,6 +17,27 @@ let traceid (x : 'a) =
     tracefn "%A" x
     x
 
+type DerivedCollection<'a, 'b when 'a : equality and 'b : equality>(src:ObservableCollection<'a>, f:'a->'b) as this =
+    inherit ObservableCollection<'b>(Seq.map f src)
+    let map = Dictionary()
+    let collChanged (e:NotifyCollectionChangedEventArgs) =
+        match e.Action with
+        | NotifyCollectionChangedAction.Add ->
+            let s = e.NewItems |> Seq.cast<'a>
+            let ds = s |> Seq.map f
+            Seq.iter2 (fun o d -> map.Add(o,d); this.Add d) s ds
+        | NotifyCollectionChangedAction.Remove ->
+            let s = e.OldItems |> Seq.cast<'a>
+            let mapped = s |> Seq.map (map.TryGetValue) |> Seq.filter fst
+            mapped |> Seq.map snd |> Seq.iter (this.Remove >> ignore)
+//        | NotifyCollectionChangedAction.Replace -> ()
+//        | NotifyCollectionChangedAction.Move -> ()
+//        | NotifyCollectionChangedAction.Reset -> ()
+        | _ -> failwith "Not Implemented"
+    do
+        Seq.iter2 (fun a b -> map.Add(a,b)) src this
+        src.CollectionChanged.Add collChanged
+        
 
 let isAddOrRemove (x:NotifyCollectionChangedEventArgs) =
     x.Action = NotifyCollectionChangedAction.Add || x.Action = NotifyCollectionChangedAction.Remove
@@ -97,47 +119,64 @@ type View<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Ele
     inherit IViewWithModel<'Event, 'Model>(m)
     member this.Root = elt
 
-[<AbstractClass>]
-type CollectionView<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
-    inherit View<'Event, 'Element, 'Model>(elt, m)
-    
-    member this.add (items : ItemsControl) creator (x : 'ItemModel) = 
-        let ctrl = creator x |> this.ComposeView
-        items.Items.Add(ctrl) |> ignore
-    
-    member private this.link<'ItemModel, 'ItemView
-        when 'ItemView :> IViewWithModel<'Event, 'ItemModel>
-        and 'ItemModel : equality>
-           (items : ItemsControl) 
-           (creator : 'ItemModel -> 'ItemView)
-           (e : NotifyCollectionChangedEventArgs) = 
-        let remove (x : 'ItemModel) = 
-            let iv = 
-                items.Items
-                |> Seq.cast<'ItemView>
-                |> Seq.tryFindIndex (fun i -> i.Model = x)
-            match iv with
-            | Some index -> items.Items.RemoveAt index
-            | None -> ()
-        match e.Action with
-        | NotifyCollectionChangedAction.Add x -> 
-            e.NewItems
-            |> Seq.cast<'ItemModel>
-            |> Seq.iter (this.add items creator)
-        | NotifyCollectionChangedAction.Remove -> 
-            e.OldItems
-            |> Seq.cast<'ItemModel>
-            |> Seq.iter remove
-        | _ -> ()
-    
-    member this.linkCollection
-           (itemsControl : ItemsControl)
-           (creator : 'ItemModel -> 'ItemView) 
-           (coll : ObservableCollection<_>) =
-        let it = elt.FindResource "ViewTemplate"
-        itemsControl.ItemTemplate <- it :?> DataTemplate
-        coll.CollectionChanged.Add(this.link itemsControl creator)
-        coll |> Seq.iter (this.add itemsControl creator)
+module CollectionSourceView =
+    open System.Windows.Data
+
+    type ViewConverter<'Event, 'Model, 'View, 'Element
+        when 'View :> View<'Event, 'Element, 'Model>
+        and 'Element :> FrameworkElement>
+            (ff:('View -> 'View), f: 'Model -> 'View) =
+        interface System.Windows.Data.IValueConverter with
+            member x.Convert(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
+                let v = f (value :?> 'Model)
+                let v2 = ff v
+                v2.Root :> obj       
+
+            member x.ConvertBack(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
+                failwith "Not implemented yet"
+
+    [<AbstractClass>]
+    type T<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
+        inherit View<'Event, 'Element, 'Model>(elt, m)
+        member this.linkCollection (itemsControl : ItemsControl)
+                                   (creator : 'ItemModel -> 'ItemView) 
+                                   (coll : ObservableCollection<_>) =
+            let it = DataTemplate(typedefof<'Model>)
+            let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
+            let b = Binding(".")
+            let conv =  ViewConverter(this.ComposeView, creator)
+            b.Converter <- conv
+            fef.SetBinding(ContentPresenter.ContentProperty, b)
+
+            it.VisualTree <- fef
+
+            itemsControl.ItemTemplate <- it
+            let collView = CollectionViewSource.GetDefaultView(coll)
+            itemsControl.ItemsSource <- collView
+            collView
+
+module DerivedCollectionSourceView =
+    open System.Windows.Data
+
+    [<AbstractClass>]
+    type T<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
+        inherit View<'Event, 'Element, 'Model>(elt, m)
+        member this.linkCollection (itemsControl : ItemsControl)
+                                   (creator : 'ItemModel -> 'ItemView) 
+                                   (coll : ObservableCollection<_>) =
+            let it = DataTemplate(typedefof<'Model>)
+            let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
+            let b = Binding("Root")
+            fef.SetBinding(ContentPresenter.ContentProperty, b)
+
+            it.VisualTree <- fef
+
+            itemsControl.ItemTemplate <- it
+
+            let derived = DerivedCollection(coll, creator >> this.ComposeView)
+            let collView = CollectionViewSource.GetDefaultView(derived)
+            itemsControl.ItemsSource <- collView
+            collView
 
 type EventHandler<'Model> = 
     | Sync of ('Model -> unit)

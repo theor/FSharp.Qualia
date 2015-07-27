@@ -11,6 +11,7 @@ open System.Windows.Controls
 open System.Windows.Media
 open System
 
+type FilteringType = All | Active | Completed
 type TodoListEvents = 
     | Add
     | Delete of ItemModel
@@ -18,6 +19,7 @@ type TodoListEvents =
     | CheckAll
     | UncheckAll
     | NewItemTextChanged of string
+    | FilteringChanged of FilteringType
 
 and ItemModel(text : string, _done : bool) = 
     member val Text = Defs.Prop text
@@ -41,8 +43,9 @@ module Item =
               x.Root.checkDone.Checked --> Checked(true, x.Model) ]
         
         override x.SetBindings(m : ItemModel) = 
-            m.Text.Add(fun t -> x.Root.labelText.Content <- t)
-            m.Done.Add(fun d -> x.Root.checkDone.IsChecked <- System.Nullable d; x.Root.labelText.Foreground <- if d then Brushes.Gray else Brushes.Black)
+            m.Text |> Observable.add(fun t -> x.Root.labelText.Content <- t)
+            m.Done |> Observable.add(fun d -> x.Root.checkDone.IsChecked <- System.Nullable d;
+                                              x.Root.labelText.Foreground <- if d then Brushes.Gray else Brushes.Black)
 
 type TodoListModel() = 
     let items = new ObservableCollection<ItemModel>()
@@ -63,77 +66,81 @@ type TodoListModel() =
         //                    |> Observable.scan (fun prev change -> prev) 0
         |> Observable.toProperty 0
     
-    member x.Items = items
+    member x.Items : ObservableCollection<ItemModel> = items
     member x.TotalCount : ReactiveProperty<int> = totalCount
     member x.DoneCount : ReactiveProperty<int> = doneCount
-    member val NewItemText = Prop("")
+    member val NewItemText : ReactiveProperty<string> = Prop("")
+    member val FilteringType : ReactiveProperty<FilteringType> = Prop(All)
+
 
 type TodoListWindow = XAML< "TodoList.xaml", true >
+type TodoListView(mw : TodoListWindow, m) = 
+    inherit DerivedCollectionSourceView.T<TodoListEvents, Window, TodoListModel>(mw.Root, m)
 
+    let filter (m:TodoListModel) (x:Item.View) =
+        match m.FilteringType.Value with
+        | All -> true
+        | Completed -> x.Model.Done.Value
+        | Active -> not x.Model.Done.Value
 
+    member val ItemsCollectionView:ComponentModel.ICollectionView = null with get,set
 
-open System.Windows.Data
-type ViewConverter<'Event, 'Model, 'View, 'Element when 'View :> Defs.View<'Event, 'Element, 'Model> and 'Element :> FrameworkElement>(ff:('View -> 'View), f: 'Model -> 'View) =
-    interface System.Windows.Data.IValueConverter with
-        member x.Convert(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
-            let v = f (value :?> 'Model)
-            let v2 = ff v
-            v2.Root :> obj       
-        member x.ConvertBack(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
-            failwith "Not implemented yet"
-
-type TodoListView(mw : TodoListWindow, m) as this = 
-    inherit CollectionView<TodoListEvents, Window, TodoListModel>(mw.Root, m)
-
-    do
-        let l = mw.list2
-        let it = DataTemplate(typedefof<ItemModel>)
-        let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
-        let b = Binding(".")
-        let conv =  ViewConverter(this.ComposeView, fun m -> Item.View(m))
-        b.Converter <- conv
-        fef.SetBinding(ContentPresenter.ContentProperty, b)
-
-        it.VisualTree <- fef
-        l.ItemTemplate <- it
-        
-        l.ItemsSource <- m.Items
-    
     override this.EventStreams = 
-        [ mw.buttonCheckAll.Click --> CheckAll
+        [ // (un)check all
+          mw.buttonCheckAll.Click --> CheckAll
           mw.buttonUncheckAll.Click --> UncheckAll
+          // filtering
+          mw.radioFilterAll.Checked --> FilteringChanged All
+          mw.radioFilterActive.Checked --> FilteringChanged Active
+          mw.radioFilterCompleted.Checked --> FilteringChanged Completed
+          // on Enter keypress, create an item
           mw.tbNewItem.KeyDown
           |> Observable.filter (fun e -> e.Key = System.Windows.Input.Key.Enter)
           |> Observable.mapTo Add
+          // new item's text
           Observable.Throttle(mw.tbNewItem.TextChanged, TimeSpan.FromMilliseconds 100.0)
           |> DispatcherObservable.ObserveOnDispatcher
           |> Observable.map (fun _ -> NewItemTextChanged mw.tbNewItem.Text) ]
     
     override this.SetBindings(m : TodoListModel) = 
-        m.Items |> this.linkCollection mw.list (fun x -> Item.View(x))
+        // items list
+        this.ItemsCollectionView <- m.Items |> this.linkCollection mw.list (Item.View)
+        // filtering
+        let p = (fun (x:obj) -> x :?> Item.View |> filter m)
+        this.ItemsCollectionView.Filter <- Predicate<obj>(p)
+        m.FilteringType |> Observable.add (fun f ->
+            match f with
+            | All -> mw.radioFilterAll.IsChecked <- Nullable true
+            | _ -> ()
+            this.ItemsCollectionView.Refresh())
+        // counts
         Observable.merge m.DoneCount m.TotalCount 
         |> Observable.add (fun _ -> mw.labelSummary.Content <- sprintf "%i / %i" m.DoneCount.Value m.TotalCount.Value)
+        // new item's text tb
         m.NewItemText |> Observable.add (fun x -> mw.tbNewItem.Text <- x)
 
+
 type TodoListController() = 
-    let add (m : TodoListModel) = m.Items.Add(ItemModel(m.NewItemText.Value, false))
+    let add (m : TodoListModel) =
+        m.Items.Add(ItemModel(m.NewItemText.Value, false))
+        m.NewItemText.Value <- ""
     
     let delete (i : ItemModel) (m : TodoListModel) = 
         tracefn "DELETE %A" i.Text
         m.Items.Remove i |> ignore
     
     let check (v : bool) (i : ItemModel) (m : TodoListModel) = 
-        tracefn "%sCHECKED %A" (if v then ""
-                                else "UN") i.Text
+        tracefn "%sCHECKED %A" (if v then "" else "UN") i.Text
         i.Done.Value <- v
-        m.DoneCount.Value <- if v then m.DoneCount.Value + 1
-                             else m.DoneCount.Value - 1
+        m.DoneCount.Value <- m.DoneCount.Value + if v then 1 else -1
     
-    let checkall (value : bool) (m : TodoListModel) = m.Items |> Seq.iter (fun i -> i.Done.Value <- value)
+    let checkall (value : bool) (m : TodoListModel) =
+        m.Items |> Seq.iter (fun i -> i.Done.Value <- value)
 
     interface IController<TodoListEvents, TodoListModel> with
         member this.InitModel m = 
             Seq.init 5 (fun i -> ItemModel((sprintf "Item %i" i), i % 2 = 0)) |> Seq.iter m.Items.Add
+
         member this.Dispatcher = 
             function 
             | Add -> add |> Sync
@@ -142,6 +149,7 @@ type TodoListController() =
             | CheckAll -> checkall true |> Sync
             | UncheckAll -> checkall false |> Sync
             | NewItemTextChanged text -> Sync(fun m -> m.NewItemText.Value <- text)
+            | FilteringChanged f -> Sync(fun m -> m.FilteringType.Value <- f)
 
 let run (app : Application) = 
     let v = TodoListView(TodoListWindow(), TodoListModel())
