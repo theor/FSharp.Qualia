@@ -20,6 +20,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <Button x:Name="buttonCheckAll">CheckAll</Button>
@@ -34,5 +35,7 @@
             <RadioButton x:Name="radioFilterActive" GroupName="Filter">Active</RadioButton>
             <RadioButton x:Name="radioFilterCompleted" GroupName="Filter">Completed</RadioButton>
         </StackPanel>
+
+        <Label x:Name="labeSelected" Grid.Row="4"/>
     </Grid>
 </Window>

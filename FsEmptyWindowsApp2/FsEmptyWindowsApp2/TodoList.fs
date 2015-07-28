@@ -20,6 +20,7 @@ type TodoListEvents =
     | UncheckAll
     | NewItemTextChanged of string
     | FilteringChanged of FilteringType
+    | SelectionChanged of ItemModel option
 
 and ItemModel(text : string, _done : bool) = 
     member val Text = Defs.Prop text
@@ -71,6 +72,7 @@ type TodoListModel() =
     member x.DoneCount : ReactiveProperty<int> = doneCount
     member val NewItemText : ReactiveProperty<string> = Prop("")
     member val FilteringType : ReactiveProperty<FilteringType> = Prop(All)
+    member val SelectedItem : ReactiveProperty<ItemModel option> = Prop(None)
 
 
 type TodoListWindow = XAML< "TodoList.xaml", true >
@@ -100,7 +102,10 @@ type TodoListView(mw : TodoListWindow, m) =
           // new item's text
           Observable.Throttle(mw.tbNewItem.TextChanged, TimeSpan.FromMilliseconds 100.0)
           |> DispatcherObservable.ObserveOnDispatcher
-          |> Observable.map (fun _ -> NewItemTextChanged mw.tbNewItem.Text) ]
+          |> Observable.map (fun _ -> NewItemTextChanged mw.tbNewItem.Text)
+          mw.list.SelectionChanged |> Observable.map (fun _ ->
+            SelectionChanged (if mw.list.SelectedItem <> null then (Some (mw.list.SelectedItem :?> Item.View).Model) else None)) ]
+
     
     override this.SetBindings(m : TodoListModel) = 
         // items list
@@ -119,6 +124,10 @@ type TodoListView(mw : TodoListWindow, m) =
         // new item's text tb
         m.NewItemText |> Observable.add (fun x -> mw.tbNewItem.Text <- x)
 
+        m.SelectedItem |> Observable.add (fun x ->
+            mw.labeSelected.Content <- match x with
+            | None -> "None"
+            | Some x -> x.Text.Value)
 
 type TodoListController() = 
     let add (m : TodoListModel) =
@@ -150,6 +159,7 @@ type TodoListController() =
             | UncheckAll -> checkall false |> Sync
             | NewItemTextChanged text -> Sync(fun m -> m.NewItemText.Value <- text)
             | FilteringChanged f -> Sync(fun m -> m.FilteringType.Value <- f)
+            | SelectionChanged item -> Sync(fun m -> m.SelectedItem.Value <- item)
 
 let run (app : Application) = 
     let v = TodoListView(TodoListWindow(), TodoListModel())
