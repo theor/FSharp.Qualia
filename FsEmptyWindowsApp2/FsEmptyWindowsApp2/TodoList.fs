@@ -85,6 +85,23 @@ type TodoListView(mw : TodoListWindow, m) =
         | Completed -> x.Model.Done.Value
         | Active -> not x.Model.Done.Value
 
+    do
+        mw.list.AllowDrop <- true
+        let h = fun(x,y) -> ()
+        let pos (e:Input.MouseEventArgs) = e.GetPosition(mw.list)
+        let down = mw.list.PreviewMouseLeftButtonDown |> Observable.map pos
+        let move = mw.list.MouseMove |> Observable.map pos
+        let up = mw.list.PreviewMouseLeftButtonUp |> Observable.map pos
+        let s= Observable.SelectMany (down, fun start ->
+            let mm = Observable.TakeUntil((move.StartWith start), up)
+            let mmz = mm.And(mm.Skip(1)).Then(fun a b -> b.X-a.X,b.Y-a.Y)
+            Observable.When(mmz)
+            )
+        s.Add (tracefn "MOUSE %A")
+//        let m = mw.list.MouseMove.StartWith down |> Observable.TakeUntil up
+//        m.
+        ()
+
     member val ItemsCollectionView:ComponentModel.ICollectionView = null with get,set
 
     override this.EventStreams = 
