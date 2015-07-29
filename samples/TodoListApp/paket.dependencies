@@ -1,0 +1,6 @@
+source https://nuget.org/api/v2
+
+nuget Rx-Main
+nuget Rx-WPF
+nuget FsXaml.Wpf
+nuget gong-wpf-dragdrop

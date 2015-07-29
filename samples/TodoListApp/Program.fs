@@ -1,6 +1,7 @@
-﻿module TodoList
+module TodoList
 
-open Defs
+open FSharp.Qualia.Defs
+open FSharp.Qualia
 open DragDrop
 open FsXaml
 open System.Reactive.Linq
@@ -11,6 +12,8 @@ open System.Collections.Specialized
 open System.Windows.Controls
 open System.Windows.Media
 open System
+open System.Windows.Threading
+open System.Threading
 
 type FilteringType = All | Active | Completed
 type TodoListEvents = 
@@ -31,7 +34,7 @@ module Item =
     type Control = XAML< "TodoItem.xaml", true >
     
     type View(m : ItemModel) as this = 
-        inherit Defs.View<TodoListEvents, Control, ItemModel>(Control(), m)
+        inherit View<TodoListEvents, Control, ItemModel>(Control(), m)
 
         do
           let v = (this.Root)
@@ -186,3 +189,11 @@ let run (app : Application) =
     let mvc = MVC(v, TodoListController())
     use eventloop = mvc.Start()
     app.Run(window = v.Root)
+
+[<STAThread>]
+[<EntryPoint>]
+let main argv = 
+    let app = Application()
+    let context = new DispatcherSynchronizationContext(Application.Current.Dispatcher)
+    SynchronizationContext.SetSynchronizationContext(context)
+    run app

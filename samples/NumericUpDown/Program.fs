@@ -1,4 +1,4 @@
-﻿module NumericUpDown
+module NumericUpDown
 
 open System
 open System.Windows
@@ -6,7 +6,8 @@ open System.Reactive.Linq
 open System.Windows.Threading
 open System.Threading
 open System.Reactive
-open Defs
+open FSharp.Qualia.Defs
+open FSharp.Qualia
 open FsXaml
 
 type MainModel() = 
@@ -51,3 +52,11 @@ let run(app:Application) =
     let mvc = MVC(v, MainController())
     use eventloop = mvc.Start()
     app.Run(window = v.Root)
+
+[<STAThread>]
+[<EntryPoint>]
+let main argv = 
+    let app = Application()
+    let context = new DispatcherSynchronizationContext(Application.Current.Dispatcher)
+    SynchronizationContext.SetSynchronizationContext(context)
+    run app

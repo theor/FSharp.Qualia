@@ -7,13 +7,7 @@
         x:Name="WindowRoot" 
         mc:Ignorable="d"
         Title="TodoList" Height="500" Width="800" >
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="App.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
