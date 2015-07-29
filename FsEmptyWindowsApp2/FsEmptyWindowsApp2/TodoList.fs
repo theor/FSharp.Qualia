@@ -1,6 +1,7 @@
 ﻿module TodoList
 
 open Defs
+open DragDrop
 open FsXaml
 open System.Reactive.Linq
 open System.Reactive.Subjects
@@ -84,22 +85,18 @@ type TodoListView(mw : TodoListWindow, m) =
         | All -> true
         | Completed -> x.Model.Done.Value
         | Active -> not x.Model.Done.Value
-
+    let listDragHandler = DragSourceHandler()
+    let deleteDropHandler = DropTargetHandler()
     do
-        mw.list.AllowDrop <- true
-        let h = fun(x,y) -> ()
-        let pos (e:Input.MouseEventArgs) = e.GetPosition(mw.list)
-        let down = mw.list.PreviewMouseLeftButtonDown |> Observable.map pos
-        let move = mw.list.MouseMove |> Observable.map pos
-        let up = mw.list.PreviewMouseLeftButtonUp |> Observable.map pos
-        let s= Observable.SelectMany (down, fun start ->
-            let mm = Observable.TakeUntil((move.StartWith start), up)
-            let mmz = mm.And(mm.Skip(1)).Then(fun a b -> b.X-a.X,b.Y-a.Y)
-            Observable.When(mmz)
-            )
-        s.Add (tracefn "MOUSE %A")
-//        let m = mw.list.MouseMove.StartWith down |> Observable.TakeUntil up
-//        m.
+        mw.list |> setDragHandler listDragHandler
+                |> setDefaultDropHandler
+                |> ignore
+        mw.deleteZone |> setDropHandler deleteDropHandler |> ignore
+        listDragHandler.Events |> Observable.map (fun x ->
+            match x with
+            | StartDrag _ -> Visibility.Visible
+            | _ -> Visibility.Collapsed)
+            |> Observable.add (fun v -> mw.deleteZone.Visibility <- v)
         ()
 
     member val ItemsCollectionView:ComponentModel.ICollectionView = null with get,set
@@ -121,7 +118,13 @@ type TodoListView(mw : TodoListWindow, m) =
           |> DispatcherObservable.ObserveOnDispatcher
           |> Observable.map (fun _ -> NewItemTextChanged mw.tbNewItem.Text)
           mw.list.SelectionChanged |> Observable.map (fun _ ->
-            SelectionChanged (if mw.list.SelectedItem <> null then (Some (mw.list.SelectedItem :?> Item.View).Model) else None)) ]
+            SelectionChanged (if mw.list.SelectedItem <> null then (Some (mw.list.SelectedItem :?> Item.View).Model) else None))
+          
+          deleteDropHandler.Events |> Observable.choose(fun x ->
+              match x with
+              | Drop i when (i.Data :? Item.View) -> Some (i.Data :?> Item.View)
+              | _ -> None)
+          |> Observable.map (fun x -> Delete x.Model)    ]
 
     
     override this.SetBindings(m : TodoListModel) = 

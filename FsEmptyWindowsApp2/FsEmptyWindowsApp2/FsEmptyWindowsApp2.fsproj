@@ -74,6 +74,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Resource Include="App.xaml" />
+    <Compile Include="DragDrop.fs" />
     <Compile Include="Core.fs" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="NumericUpDown.fs" />
@@ -104,6 +105,10 @@
     </Reference>
     <Reference Include="FsXaml.Wpf.TypeProvider">
       <HintPath>..\..\packages\FsXaml.Wpf.0.9.9\lib\net45\FsXaml.Wpf.TypeProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GongSolutions.Wpf.DragDrop">
+      <HintPath>..\..\packages\gong-wpf-dragdrop.1.0.0-ALPHA010\lib\net40\GongSolutions.Wpf.DragDrop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />

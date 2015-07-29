@@ -37,5 +37,7 @@
         </StackPanel>
 
         <Label x:Name="labeSelected" Grid.Row="4"/>
+
+        <Label x:Name="deleteZone" Grid.Row="4" Foreground="Red" Background="Gray"  Content="DELETE" Visibility="Collapsed"/>
     </Grid>
 </Window>
