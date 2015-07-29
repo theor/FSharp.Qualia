@@ -184,6 +184,7 @@ localpackages/
 paket-files
 *.orig
 .paket/paket.exe
+!.paket/paket.bootstrapper.exe
 docs/content/license.md
 docs/content/release-notes.md
 .fake
