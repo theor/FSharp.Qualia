@@ -149,8 +149,8 @@ type TodoListView(mw : TodoListWindow, m) =
 
         m.SelectedItem |> Observable.add (fun x ->
             mw.labeSelected.Content <- match x with
-            | None -> "None"
-            | Some x -> x.Text.Value)
+                                       | None -> "None"
+                                       | Some x -> x.Text.Value)
 
 type TodoListController() = 
     let add (m : TodoListModel) =
