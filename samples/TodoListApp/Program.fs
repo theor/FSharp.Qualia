@@ -2,7 +2,7 @@ module TodoList
 
 open FSharp.Qualia.Defs
 open FSharp.Qualia
-open DragDrop
+open FSharp.Qualia.WPF.DragDrop
 open FsXaml
 open System.Reactive.Linq
 open System.Reactive.Subjects
