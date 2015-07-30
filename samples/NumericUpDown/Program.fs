@@ -2,10 +2,8 @@ module NumericUpDown
 
 open System
 open System.Windows
-open System.Reactive.Linq
 open System.Windows.Threading
 open System.Threading
-open System.Reactive
 open FSharp.Qualia.Defs
 open FSharp.Qualia
 open FsXaml

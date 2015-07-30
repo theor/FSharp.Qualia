@@ -5,15 +5,13 @@ open FSharp.Qualia
 open FSharp.Qualia.WPF.DragDrop
 open FsXaml
 open System.Reactive.Linq
-open System.Reactive.Subjects
 open System.Windows
 open System.Collections.ObjectModel
-open System.Collections.Specialized
-open System.Windows.Controls
 open System.Windows.Media
 open System
 open System.Windows.Threading
 open System.Threading
+open FSharp.Qualia.WPF
 
 type FilteringType = All | Active | Completed
 type TodoListEvents = 
@@ -81,7 +79,7 @@ type TodoListModel() =
 
 type TodoListWindow = XAML< "TodoList.xaml", true >
 type TodoListView(mw : TodoListWindow, m) = 
-    inherit DerivedCollectionSourceView.T<TodoListEvents, Window, TodoListModel>(mw.Root, m)
+    inherit DerivedCollectionSourceView<TodoListEvents, Window, TodoListModel>(mw.Root, m)
 
     let filter (m:TodoListModel) (x:Item.View) =
         match m.FilteringType.Value with

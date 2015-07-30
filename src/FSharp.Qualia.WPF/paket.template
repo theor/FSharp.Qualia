@@ -16,7 +16,7 @@ copyright
 tags
     ui wpf framework
 summary
-    Event stream/rx based UI Framework and architecture
+    WPF specific utils for FSharp.Qualia
 description
     Description not set
 

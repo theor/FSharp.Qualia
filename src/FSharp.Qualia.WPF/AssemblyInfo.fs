@@ -1,7 +1,7 @@
 ﻿namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("FSharp.Qualia")>]
+[<assembly: AssemblyTitleAttribute("FSharp.Qualia.WPF")>]
 [<assembly: AssemblyProductAttribute("FSharp.Qualia")>]
 [<assembly: AssemblyDescriptionAttribute("Event stream/rx based UI Framework and architecture")>]
 [<assembly: AssemblyVersionAttribute("1.0")>]

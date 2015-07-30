@@ -1,13 +1,10 @@
 namespace FSharp.Qualia
 
 
-open FsXaml
 open System
 open System.Reactive.Linq
-open System.Windows
 open System.Reactive
 open System.Reactive.Subjects
-open System.Windows.Controls
 open System.Collections.ObjectModel
 open System.Collections.Specialized
 open System.Collections.Generic
@@ -26,24 +23,12 @@ module Library =
   ///  - `num` - whatever
   let hello num = 42
 
+
+    
 [<RequireQualifiedAccess>]
 module internal Observer = 
-    open System
-    open System.Reactive
-    open System.Windows.Threading
-    
-    let notifyOnDispatcher (observer : IObserver<_>) = 
-        let dispatcher = Dispatcher.CurrentDispatcher
-        
-        let invokeOnDispatcher f = 
-            if dispatcher.CheckAccess() then f()
-            else dispatcher.InvokeAsync f |> ignore
-        { new IObserver<_> with
-              member __.OnNext value = invokeOnDispatcher (fun () -> observer.OnNext value)
-              member __.OnError error = invokeOnDispatcher (fun () -> observer.OnError error)
-              member __.OnCompleted() = invokeOnDispatcher observer.OnCompleted }
-    
     let preventReentrancy observer = Observer.Synchronize(observer, preventReentrancy = true)
+
 
 module Defs =
 
@@ -135,69 +120,11 @@ and [<AbstractClass>] IViewWithModel<'Event, 'Model>(m : 'Model) =
     abstract SetBindings : 'Model -> unit
 
 [<AbstractClass>]
-type View<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
+type View<'Event, 'Element, 'Model>(elt : 'Element, m : 'Model) = 
     inherit IViewWithModel<'Event, 'Model>(m)
     member this.Root = elt
 
-module CollectionSourceView =
-    open System.Windows.Data
 
-    type ViewConverter<'Event, 'Model, 'View, 'Element
-        when 'View :> View<'Event, 'Element, 'Model>
-        and 'Element :> FrameworkElement>
-            (ff:('View -> 'View), f: 'Model -> 'View) =
-        interface System.Windows.Data.IValueConverter with
-            member x.Convert(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
-                let v = f (value :?> 'Model)
-                let v2 = ff v
-                v2.Root :> obj       
-
-            member x.ConvertBack(value: obj, targetType: Type, parameter: obj, culture: Globalization.CultureInfo): obj = 
-                failwith "Not implemented yet"
-
-    [<AbstractClass>]
-    type T<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
-        inherit View<'Event, 'Element, 'Model>(elt, m)
-        member this.linkCollection (itemsControl : ItemsControl)
-                                   (creator : 'ItemModel -> 'ItemView) 
-                                   (coll : ObservableCollection<_>) =
-            let it = DataTemplate(typedefof<'Model>)
-            let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
-            let b = Binding(".")
-            let conv =  ViewConverter(this.ComposeView, creator)
-            b.Converter <- conv
-            fef.SetBinding(ContentPresenter.ContentProperty, b)
-
-            it.VisualTree <- fef
-
-            itemsControl.ItemTemplate <- it
-            let collView = CollectionViewSource.GetDefaultView(coll)
-            itemsControl.ItemsSource <- collView
-            collView
-
-module DerivedCollectionSourceView =
-    open System.Windows.Data
-    open Defs
-
-    [<AbstractClass>]
-    type T<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
-        inherit View<'Event, 'Element, 'Model>(elt, m)
-        member this.linkCollection (itemsControl : ItemsControl)
-                                   (creator : 'ItemModel -> 'ItemView) 
-                                   (coll : ObservableCollection<_>) =
-            let it = DataTemplate(typedefof<'Model>)
-            let fef = FrameworkElementFactory(typedefof<ContentPresenter>)
-            let b = Binding("Root")
-            fef.SetBinding(ContentPresenter.ContentProperty, b)
-
-            it.VisualTree <- fef
-
-            itemsControl.ItemTemplate <- it
-
-            let derived = DerivedCollection(coll, creator >> this.ComposeView)
-            let collView = CollectionViewSource.GetDefaultView(derived)
-            itemsControl.ItemsSource <- collView
-            collView
 
 open Defs
 type EventHandler<'Model> = 
@@ -208,7 +135,7 @@ type IController<'Event, 'Model> =
     abstract InitModel : 'Model -> unit
     abstract Dispatcher : ('Event -> EventHandler<'Model>) with (*error(why, event)*) get
 
-type MVC<'Model, 'Event, 'Element when 'Element :> Window>(v : View<'Event, 'Element, 'Model>, c : IController<'Event, 'Model>) = 
+type MVC<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c : IController<'Event, 'Model>) = 
     let hub = new Subject<'Event>()
     let error (why, event) = tracefn "%A %A" why event
     
@@ -237,5 +164,4 @@ type MVC<'Model, 'Event, 'Element when 'Element :> Window>(v : View<'Event, 'Ele
                     (computation = eventHandler v.Model, continuation = ignore, exceptionContinuation = (fun why -> ()), 
                      cancellationContinuation = ignore))
         |> Observer.preventReentrancy
-        |> Observer.notifyOnDispatcher
         |> hub.Subscribe
