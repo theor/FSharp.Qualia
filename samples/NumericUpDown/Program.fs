@@ -4,7 +4,6 @@ open System
 open System.Windows
 open System.Windows.Threading
 open System.Threading
-open FSharp.Qualia.Defs
 open FSharp.Qualia
 open FsXaml
 
@@ -17,6 +16,7 @@ type MainEvents =
     | Edit of string
 
 type MainWindow = XAML<"MainWindow.xaml", true>   
+
 type MainView(mw : MainWindow, m) = 
     inherit View<MainEvents, Window, MainModel>(mw.Root, m)
     
@@ -29,7 +29,7 @@ type MainView(mw : MainWindow, m) =
         m.Value.Add(fun v -> mw.label.Content <- v)
         m.Value.Add(fun v -> mw.textBox.Text <- (string v))
 
-type MainController() = 
+type MainDispatcher() = 
     let up (m : MainModel) = m.Value.Value <- m.Value.Value + 1
     let down (m : MainModel) = m.Value.Value <- m.Value.Value - 1
     let edit str (m : MainModel) = 
@@ -37,7 +37,7 @@ type MainController() =
         | true, i -> m.Value.Value <- i
         | false, _ -> ()
     
-    interface IController<MainEvents, MainModel> with
+    interface IDispatcher<MainEvents, MainModel> with
         member this.InitModel _ = ()
         member this.Dispatcher = 
             function 
@@ -47,7 +47,7 @@ type MainController() =
 
 let run(app:Application) =
     let v = MainView(MainWindow(), MainModel())
-    let mvc = MVC(v, MainController())
+    let mvc = EventLoop(v, MainDispatcher())
     use eventloop = mvc.Start()
     app.Run(window = v.Root)
 

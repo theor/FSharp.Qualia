@@ -45,7 +45,12 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils.fs" />
+    <Compile Include="ReactiveProperty.fs" />
+    <Compile Include="DerivedCollection.fs" />
+    <Compile Include="View.fs" />
     <Compile Include="Library.fs" />
+    <Compile Include="EventLoop.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />

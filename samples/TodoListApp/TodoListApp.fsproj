@@ -62,6 +62,10 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="TodoItem.fs" />
+    <Compile Include="TodoList.fs" />
+    <Compile Include="Dispatcher.fs" />
     <Compile Include="Program.fs" />
     <Content Include="App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

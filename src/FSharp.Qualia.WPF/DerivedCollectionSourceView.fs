@@ -1,29 +1,10 @@
-namespace FSharp.Qualia.WPF
+﻿namespace FSharp.Qualia.WPF
 
+open System.Collections.ObjectModel
 open System.Windows
 open System.Windows.Controls
-open System.Windows.Data
 open FSharp.Qualia
-open FSharp.Qualia.Defs
-open System.Collections.ObjectModel
-
-[<RequireQualifiedAccess>]
-module internal Observer = 
-    open System
-    open System.Windows.Threading
-    
-    let notifyOnDispatcher (observer : IObserver<_>) = 
-        let dispatcher = Dispatcher.CurrentDispatcher
-        
-        let invokeOnDispatcher f = 
-            if dispatcher.CheckAccess() then f()
-            else dispatcher.InvokeAsync f |> ignore
-        { new IObserver<_> with
-              member __.OnNext value = invokeOnDispatcher (fun () -> observer.OnNext value)
-              member __.OnError error = invokeOnDispatcher (fun () -> observer.OnError error)
-              member __.OnCompleted() = invokeOnDispatcher observer.OnCompleted }
-
-
+open System.Windows.Data
 
 [<AbstractClass>]
 type DerivedCollectionSourceView<'Event, 'Element, 'Model when 'Element :> FrameworkElement>(elt : 'Element, m : 'Model) = 
