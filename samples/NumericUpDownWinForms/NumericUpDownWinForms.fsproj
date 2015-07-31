@@ -69,6 +69,11 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NumericUpDown\NumericUpDown.fsproj">
+      <Name>NumericUpDown</Name>
+      <Project>{230f96a3-08ee-4520-95e7-64d9705e628c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

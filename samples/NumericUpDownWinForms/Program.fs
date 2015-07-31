@@ -1,18 +1,11 @@
-module NumericUpDown
+module NumericUpDownWinForms
 
 open System
-open FSharp.Qualia
 open System.Windows.Forms
-
-type MainModel() = 
-    member val Value = new ReactiveProperty<int>(0)
-
-type MainEvents = 
-    | Up
-    | Down
-    | Edit of string
+open FSharp.Qualia
+open NumericUpDown
     
-type MainForm() as x =
+type MainForm() =
     inherit Form()
 
     let p = new TableLayoutPanel()
@@ -44,33 +37,15 @@ type MainView(mw : MainForm, m) =
         m.Value.Add(fun v -> mw.Label.Text <- (string v))
         m.Value.Add(fun v -> mw.TextBox.Text <- (string v))
 
-type MainDispatcher() = 
-    let up (m : MainModel) = m.Value.Value <- m.Value.Value + 1
-    let down (m : MainModel) = m.Value.Value <- m.Value.Value - 1
-    let edit str (m : MainModel) = 
-        match Int32.TryParse str with
-        | true, i -> m.Value.Value <- i
-        | false, _ -> ()
-    
-    interface IDispatcher<MainEvents, MainModel> with
-        member this.InitModel _ = ()
-        member this.Dispatcher = 
-            function 
-            | Up -> Sync up
-            | Down -> Sync down
-            | Edit str -> Sync(edit str)
 
 let run() =
     let v = MainView(new MainForm(), MainModel())
     let mvc = EventLoop(v, MainDispatcher())
     use eventloop = mvc.Start()
-    v.Root.ShowDialog()
+    v.Root.ShowDialog() |> ignore
 
 [<STAThread>]
 [<EntryPoint>]
 let main argv = 
-//    let app = Application.
-//    let context = new DispatcherSynchronizationContext(Application.Current.Dispatcher)
-//    SynchronizationContext.SetSynchronizationContext(context)
-    run() |> ignore
+    run()
     0

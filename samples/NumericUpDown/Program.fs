@@ -55,6 +55,4 @@ let run(app:Application) =
 [<EntryPoint>]
 let main argv = 
     let app = Application()
-    let context = new DispatcherSynchronizationContext(Application.Current.Dispatcher)
-    SynchronizationContext.SetSynchronizationContext(context)
     run app
