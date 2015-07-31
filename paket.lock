@@ -4,6 +4,7 @@ NUGET
     Expression.Blend.Sdk (1.0.2) - framework: >= net45
     FAKE (4.0.2)
     FSharp.Compiler.Service (1.3.1.0)
+    FSharp.Core (4.0.0.1)
     FSharp.Formatting (2.10.0)
       FSharp.Compiler.Service (>= 0.0.87)
       FSharpVSPowerTools.Core (1.8.0)
