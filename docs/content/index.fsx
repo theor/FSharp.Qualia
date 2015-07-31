@@ -9,6 +9,8 @@ FSharp.Qualia
 
 Documentation
 
+![Tutorial](img/archi.png)
+
 <div class="row">
   <div class="span1"></div>
   <div class="span6">
