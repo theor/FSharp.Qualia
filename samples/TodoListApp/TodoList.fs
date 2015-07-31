@@ -16,7 +16,7 @@ type Model() =
     let totalCount = 
         collChanged
         |> Observable.map (fun _ -> items.Count)
-        |> Observable.toProperty 0
+        |> toProperty 0
     
     let doneCount = 
         collChanged
@@ -26,7 +26,7 @@ type Model() =
                |> Seq.filter (fun i -> i.Done.Value)
                |> Seq.length)
         //                    |> Observable.scan (fun prev change -> prev) 0
-        |> Observable.toProperty 0
+        |> toProperty 0
     
     member x.Items = items
     member x.TotalCount = totalCount

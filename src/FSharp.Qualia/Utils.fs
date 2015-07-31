@@ -1,5 +1,4 @@
-﻿[<AutoOpen>]
-module Utils
+﻿namespace FSharp.Qualia
 
 open System
 
@@ -12,12 +11,13 @@ module internal Observer =
     open System.Reactive
     let preventReentrancy observer = Observer.Synchronize(observer, preventReentrancy = true)
 
+[<AutoOpen>]
+module Utils =
+    let tracefn format = Printf.kprintf (System.Diagnostics.Trace.WriteLine) format
 
-let tracefn format = Printf.kprintf (System.Diagnostics.Trace.WriteLine) format
+    let traceid (x : 'a) = 
+        tracefn "%A" x
+        x
 
-let traceid (x : 'a) = 
-    tracefn "%A" x
-    x
-
-let inline (-->) (o:IObservable<_>) (value) = o |> Observable.mapTo value
+    let inline (-->) (o:IObservable<_>) (value) = o |> Observable.mapTo value
 

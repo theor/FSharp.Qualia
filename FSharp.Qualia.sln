@@ -43,6 +43,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TodoListApp", "samples\Todo
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.Qualia.WPF", "src\FSharp.Qualia.WPF\FSharp.Qualia.WPF.fsproj", "{F76CBDDF-B8DE-4BC2-84C4-55C56E356CD9}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NumericUpDownWinForms", "samples\NumericUpDownWinForms\NumericUpDownWinForms.fsproj", "{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{F76CBDDF-B8DE-4BC2-84C4-55C56E356CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F76CBDDF-B8DE-4BC2-84C4-55C56E356CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F76CBDDF-B8DE-4BC2-84C4-55C56E356CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +85,6 @@ Global
 		{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{230F96A3-08EE-4520-95E7-64D9705E628C} = {0C608DE9-D4D3-446B-B7AB-F0F9F0C6498C}
 		{BA32E9D3-D3B0-42A2-9032-44F3D40584C4} = {0C608DE9-D4D3-446B-B7AB-F0F9F0C6498C}
+		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF} = {0C608DE9-D4D3-446B-B7AB-F0F9F0C6498C}
 	EndGlobalSection
 EndGlobal

@@ -13,7 +13,7 @@ module Core =
         | NotifyCollectionChangedAction.Remove -> Remove (x.OldItems |> Seq.cast<'a>) |> Some
         | _ -> None
     
-[<RequireQualifiedAccess>]
-module Observable = 
+[<AutoOpen>]
+module ObservableExtentions = 
     let toProperty (init:'a) (source:IObservable<'a>) =
         new ReactiveProperty<'a>(source, init)
