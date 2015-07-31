@@ -24,3 +24,5 @@ type View(m : TodoItemModel) as this =
         m.Text |> Observable.add(fun t -> x.Root.labelText.Content <- t)
         m.Done |> Observable.add(fun d -> x.Root.checkDone.IsChecked <- System.Nullable d;
                                             x.Root.labelText.Foreground <- if d then Media.Brushes.Gray else Media.Brushes.Black)
+
+let createView x = new View(x)

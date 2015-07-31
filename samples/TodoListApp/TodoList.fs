@@ -89,7 +89,7 @@ type TodoListView(mw : TodoListWindow, m) =
     
     override this.SetBindings(m : Model) = 
         // items list
-        this.ItemsCollectionView <- m.Items |> this.linkCollection mw.list (TodoItem.View)
+        this.ItemsCollectionView <- m.Items |> this.linkCollection mw.list (TodoItem.createView)
         // filtering
         let p = (fun (x:obj) -> x :?> TodoItem.View |> filter m)
         this.ItemsCollectionView.Filter <- Predicate<obj>(p)
