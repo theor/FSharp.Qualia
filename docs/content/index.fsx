@@ -51,7 +51,10 @@ A minimal Qualia app needs 5 types:
 - a dispatcher, handling these events and transforming the model
 - an event loop, wiring all previous types
 
-The example is a simple winforms numeric up down. The final app will look like this: ![numericupdown](img/numericupdown.png)
+The example is a simple winforms numeric up down. The final app will look like this:
+
+![numericupdown](img/numericupdown.png)
+
 The + and - buttons increment or decrement the value, which is displayed in a label and a textbox. Changin the value in the textbox will update the value if it can be parsed to an int.
 
 ### Event type
@@ -78,7 +81,7 @@ ReactiveProperty is basically a wrapper around Rx BehaviorSubject. It's an IObse
 
 type MainModel() = 
     member val Value = new ReactiveProperty<int>(0)
-    
+
 (**
 ### View
 The view is split in two parts: the form itself and the Qualia View.
@@ -108,7 +111,7 @@ type MainForm() =
         addAt x.ButtonDown 1 1
         addAt x.TextBox 0 0
         addAt x.Label 0 1
- 
+
 (**
 #### Qualia View
 The actual Form backing the view. all exposed members will be used by the view.
@@ -123,7 +126,7 @@ There's also a --> operator defined for conciseness  *)
         [ mw.ButtonUp.Click |> Observable.mapTo Up // map first button clicked event
           mw.ButtonDown.Click |> Observable.mapTo Down // second one
           mw.TextBox.TextChanged |> Observable.map (fun e -> Edit mw.TextBox.Text) ] // map textchanged events
-    
+
 (**
 SetBindings subscribe to property changes in the model and updates the ui accordingly.
 In this case, when the model value changes, we set both the label and the textbox content
@@ -170,7 +173,6 @@ let main argv =
     use eventloop = mvc.Start() // wires all events/streams/...
     v.Root.ShowDialog() |> ignore // v.Root is the backing visual element provided, here the MainForm instance.
     0
-
 
 (**
 Some more info
