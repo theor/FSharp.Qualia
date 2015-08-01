@@ -29,8 +29,6 @@ Architecture overview
 
 ![Qualia Architecture Overview](img/qualia_archi.png)
 
-![Tutorial](img/archi.png)
-
 <div class="row">
   <div class="span1"></div>
   <div class="span6">
