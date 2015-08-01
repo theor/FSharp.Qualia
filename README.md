@@ -1,32 +1,19 @@
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/issue)](http://issuestats.com/github/fsprojects/ProjectScaffold)
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/pr)](http://issuestats.com/github/fsprojects/ProjectScaffold)
+[![Issue Stats](http://issuestats.com/github/theor/FSharp.Qualia/badge/issue)](http://issuestats.com/github/theor/FSharp.Qualia)
+[![Issue Stats](http://issuestats.com/github/theor/FSharp.Qualia/badge/pr)](http://issuestats.com/github/theor/FSharp.Qualia)
 
-# ProjectScaffold
+# FSharp.Qualia
 
-This project can be used to scaffold a prototypical .NET solution including file system layout and tooling. This includes a build process that: 
+[http://theor.github.io/FSharp.Qualia/](http://theor.github.io/FSharp.Qualia/)
 
-* updates all AssemblyInfo files
-* compiles the application and runs all test projects
-* generates [SourceLinks](https://github.com/ctaggart/SourceLink)
-* generates API docs based on XML document tags
-* generates [documentation based on Markdown files](http://fsprojects.github.io/ProjectScaffold/writing-docs.html)
-* generates [NuGet](http://www.nuget.org) packages
-* and allows a simple [one step release process](http://fsprojects.github.io/ProjectScaffold/release-process.html).
+Qualia is a MVC-ish UI framework heavily inspired by React+Flux and FSharp.Desktop.UI The goal is to provide a decoupled architecture using Rx and idiomatic F#, based on an unidirectional event loop.
 
-In order to start the scaffolding process run 
+This project started as UI architecture research. FSharp.Desktop.UI seemed like a great solution, but still relied on WPF bindings and had no facility to handle collections. Still, it would not exist without FSharp.Desktop.UI - a big THANK YOU to @dmitry-a-morozov and @forki.
+
+Qualia is made with [Project Scaffold](https://github.com/fsprojects/ProjectScaffold), using [Paket](https://github.com/fsprojects/Paket) to manage dependencies, [FAKE](http://fsharp.github.io/FAKE/) to build and [FSharp.Formatting](http://tpetricek.github.io/FSharp.Formatting/) to generate documentation.
+
+In order to to build the project, run
 
     $ build.cmd // on windows    
     $ build.sh  // on mono
     
-Read the [Getting started tutorial](http://fsprojects.github.io/ProjectScaffold/index.html#Getting-started) to learn more.
-
-Documentation: http://fsprojects.github.io/ProjectScaffold
-
-## Maintainer(s)
-
-- [@forki](https://github.com/forki)
-- [@pblasucci](https://github.com/pblasucci)
-- [@sergey-tihon](https://github.com/sergey-tihon)
-
-The default maintainer account for projects under "fsprojects" is [@fsprojectsgit](https://github.com/fsprojectsgit) - F# Community Project Incubation Space (repo management)
-
+Read the [Getting started tutorial](http://theor.github.io/FSharp.Qualia/) to learn more.
