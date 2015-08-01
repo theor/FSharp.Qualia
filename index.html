@@ -67,8 +67,11 @@ The goal is to provide a decoupled architecture using <a href="http://rx.codeple
 <li>an event loop, wiring all previous types</li>
 </ul>
 
-<p>The example is a simple winforms numeric up down. The final app will look like this: <img src="img/numericupdown.png" alt="numericupdown" />
-The + and - buttons increment or decrement the value, which is displayed in a label and a textbox. Changin the value in the textbox will update the value if it can be parsed to an int.</p>
+<p>The example is a simple winforms numeric up down. The final app will look like this:</p>
+
+<p><img src="img/numericupdown.png" alt="numericupdown" /></p>
+
+<p>The + and - buttons increment or decrement the value, which is displayed in a label and a textbox. Changin the value in the textbox will update the value if it can be parsed to an int.</p>
 
 <h3><a name="Event-type" class="anchor" href="#Event-type">Event type</a></h3>
 
@@ -102,11 +105,9 @@ ReactiveProperty is basically a wrapper around Rx BehaviorSubject. It's an IObse
 
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
-<span class="l">3: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">MainModel</span>() <span class="o">=</span> 
     <span class="k">member</span> <span class="k">val</span> <span class="i">Value</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="t">ReactiveProperty</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="t">int</span><span class="o">&gt;</span>(<span class="n">0</span>)
-    
 </code></pre></td>
 </tr>
 </table>
@@ -140,7 +141,6 @@ ReactiveProperty is basically a wrapper around Rx BehaviorSubject. It's an IObse
 <span class="l">17: </span>
 <span class="l">18: </span>
 <span class="l">19: </span>
-<span class="l">20: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="t">MainForm</span>() <span class="o">=</span>
     <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="t">Form</span>()
@@ -161,7 +161,6 @@ ReactiveProperty is basically a wrapper around Rx BehaviorSubject. It's an IObse
         <span onmouseout="hideTip(event, 'fs18', 51)" onmouseover="showTip(event, 'fs18', 51)" class="f">addAt</span> <span onmouseout="hideTip(event, 'fs30', 52)" onmouseover="showTip(event, 'fs30', 52)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 53)" onmouseover="showTip(event, 'fs36', 53)" class="i">ButtonDown</span> <span class="n">1</span> <span class="n">1</span>
         <span onmouseout="hideTip(event, 'fs18', 54)" onmouseover="showTip(event, 'fs18', 54)" class="f">addAt</span> <span onmouseout="hideTip(event, 'fs30', 55)" onmouseover="showTip(event, 'fs30', 55)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 56)" onmouseover="showTip(event, 'fs37', 56)" class="i">TextBox</span> <span class="n">0</span> <span class="n">0</span>
         <span onmouseout="hideTip(event, 'fs18', 57)" onmouseover="showTip(event, 'fs18', 57)" class="f">addAt</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 59)" onmouseover="showTip(event, 'fs38', 59)" class="i">Label</span> <span class="n">0</span> <span class="n">1</span>
- 
 </code></pre></td>
 </tr>
 </table>
@@ -188,13 +187,11 @@ There's also a --&gt; operator defined for conciseness</p>
 <span class="l">2: </span>
 <span class="l">3: </span>
 <span class="l">4: </span>
-<span class="l">5: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs43', 69)" onmouseover="showTip(event, 'fs43', 69)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 70)" onmouseover="showTip(event, 'fs44', 70)" class="i">EventStreams</span> <span class="o">=</span> 
         [ <span onmouseout="hideTip(event, 'fs40', 71)" onmouseover="showTip(event, 'fs40', 71)" class="i">mw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 72)" onmouseover="showTip(event, 'fs35', 72)" class="i">ButtonUp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 73)" onmouseover="showTip(event, 'fs45', 73)" class="i">Click</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 74)" onmouseover="showTip(event, 'fs46', 74)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 75)" onmouseover="showTip(event, 'fs47', 75)" class="f">mapTo</span> <span onmouseout="hideTip(event, 'fs7', 76)" onmouseover="showTip(event, 'fs7', 76)" class="p">Up</span> <span class="c">// map first button clicked event</span>
           <span onmouseout="hideTip(event, 'fs40', 77)" onmouseover="showTip(event, 'fs40', 77)" class="i">mw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 78)" onmouseover="showTip(event, 'fs36', 78)" class="i">ButtonDown</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 79)" onmouseover="showTip(event, 'fs45', 79)" class="i">Click</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 80)" onmouseover="showTip(event, 'fs46', 80)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 81)" onmouseover="showTip(event, 'fs47', 81)" class="f">mapTo</span> <span onmouseout="hideTip(event, 'fs8', 82)" onmouseover="showTip(event, 'fs8', 82)" class="p">Down</span> <span class="c">// second one</span>
           <span onmouseout="hideTip(event, 'fs40', 83)" onmouseover="showTip(event, 'fs40', 83)" class="i">mw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 84)" onmouseover="showTip(event, 'fs37', 84)" class="i">TextBox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 85)" onmouseover="showTip(event, 'fs48', 85)" class="i">TextChanged</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 86)" onmouseover="showTip(event, 'fs46', 86)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 87)" onmouseover="showTip(event, 'fs49', 87)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs32', 88)" onmouseover="showTip(event, 'fs32', 88)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 89)" onmouseover="showTip(event, 'fs9', 89)" class="p">Edit</span> <span onmouseout="hideTip(event, 'fs40', 90)" onmouseover="showTip(event, 'fs40', 90)" class="i">mw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 91)" onmouseover="showTip(event, 'fs37', 91)" class="i">TextBox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 92)" onmouseover="showTip(event, 'fs50', 92)" class="i">Text</span>) ] <span class="c">// map textchanged events</span>
-    
 </code></pre></td>
 </tr>
 </table>
