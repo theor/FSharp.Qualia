@@ -2,7 +2,7 @@ init:
   - git config --global core.autocrlf input
 build_script:
   - cmd: build.cmd NuGet
-test: off
+test: auto
 version: 0.0.1.{build}
 artifacts:
   - path: bin
