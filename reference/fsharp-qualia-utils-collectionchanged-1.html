@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>EventLoop<'Model, 'Event, 'Element> - FSharp.Qualia</title>
+    <title>CollectionChanged<'a> - FSharp.Qualia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="theor"/>
@@ -35,66 +35,56 @@
 
 
 
-<h1>EventLoop<'Model, 'Event, 'Element></h1>
+<h1>CollectionChanged<'a></h1>
 <p>
   <span>Namespace: FSharp.Qualia</span><br />
+  <span>Parent Module: <a href="fsharp-qualia-utils.html">Utils</a></span>
 </p>
 <div class="xmldoc">
-<p>The event loop itself, wiring all moving parts</p>
+<p>Discriminated union to represent additions or removals to a list</p>
 
 
 </div>
-  <h3>Constructors</h3>
+  <h3>Union Cases</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Union Case</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
-            new(v, c)
+          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+            Add(seq&lt;&#39;a&gt;)
           </code>
-          <div class="tip" id="19">
-            <strong>Signature:</strong> (v:View&lt;&#39;Event,&#39;Element,&#39;Model&gt; * c:IDispatcher&lt;&#39;Event,&#39;Model&gt;) -&gt; EventLoop&lt;&#39;Model,&#39;Event,&#39;Element&gt;<br />
+          <div class="tip" id="14">
+            <strong>Signature:</strong> seq&lt;&#39;a&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/EventLoop.fs#L24-24" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L35-35" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
         </td>
       </tr>
-    </tbody>
-  </table>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
-            Start()
+          <code onmouseout="hideTip(event, '15', 15)" onmouseover="showTip(event, '15', 15)">
+            Remove(seq&lt;&#39;a&gt;)
           </code>
-          <div class="tip" id="20">
-            <strong>Signature:</strong> unit -&gt; IDisposable<br />
+          <div class="tip" id="15">
+            <strong>Signature:</strong> seq&lt;&#39;a&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/EventLoop.fs#L38-38" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L35-35" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Starts the event loop - will init the model, set its bindings, subscribe to the views event streams and handle them</p>
-
-
-
+          
         </td>
       </tr>
     </tbody>

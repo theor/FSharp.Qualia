@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>EventLoop<'Model, 'Event, 'Element> - FSharp.Qualia</title>
+    <title>ObservableExtensions - FSharp.Qualia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="theor"/>
@@ -35,63 +35,37 @@
 
 
 
-<h1>EventLoop<'Model, 'Event, 'Element></h1>
+<h1>ObservableExtensions</h1>
 <p>
   <span>Namespace: FSharp.Qualia</span><br />
 </p>
 <div class="xmldoc">
-<p>The event loop itself, wiring all moving parts</p>
-
-
 </div>
-  <h3>Constructors</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
-            new(v, c)
+          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+            toProperty init source
           </code>
-          <div class="tip" id="19">
-            <strong>Signature:</strong> (v:View&lt;&#39;Event,&#39;Element,&#39;Model&gt; * c:IDispatcher&lt;&#39;Event,&#39;Model&gt;) -&gt; EventLoop&lt;&#39;Model,&#39;Event,&#39;Element&gt;<br />
-                      </div>
+          <div class="tip" id="3">
+            <strong>Signature:</strong> init:&#39;a -&gt; source:IObservable&lt;&#39;a&gt; -&gt; ReactiveProperty&lt;&#39;a&gt;<br />
+                          <strong>Type parameters:</strong> 'a          </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/EventLoop.fs#L24-24" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/ReactiveProperty.fs#L32-32" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
-            Start()
-          </code>
-          <div class="tip" id="20">
-            <strong>Signature:</strong> unit -&gt; IDisposable<br />
-                      </div>
-        </td>
-        <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/EventLoop.fs#L38-38" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Starts the event loop - will init the model, set its bindings, subscribe to the views event streams and handle them</p>
+          <p>creates a ReactiveProperty from an observable, with an initial value</p>
 
 
 

@@ -43,6 +43,26 @@
 </div>
 
 <!-- Render nested types and modules, if there are any -->
+  <h2>Nested types and modules</h2>
+  <div>
+      <table class="table table-bordered type-list">
+    <thead>
+      <tr><td>Type</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="type-name">
+            <a href="fsharp-qualia-utils-collectionchanged-1.html">CollectionChanged<'a></a>
+          </td>
+          <td class="xmldoc"><p>Discriminated union to represent additions or removals to a list</p>
+
+
+</td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
 
   <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
@@ -53,55 +73,106 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
+          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
             ( --&gt; ) o value
           </code>
-          <div class="tip" id="5">
-            <strong>Signature:</strong> o:IObservable&lt;&#39;?6971&gt; -&gt; value:&#39;?6972 -&gt; IObservable&lt;&#39;?6972&gt;<br />
-                          <strong>Type parameters:</strong> '?6971, '?6972          </div>
+          <div class="tip" id="4">
+            <strong>Signature:</strong> o:IObservable&lt;&#39;?6967&gt; -&gt; value:&#39;?6968 -&gt; IObservable&lt;&#39;?6968&gt;<br />
+                          <strong>Type parameters:</strong> '?6967, '?6968          </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L22-22" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L28-28" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Convenience operator for Observable.mapTo</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
+            isAddOrRemove x
+          </code>
+          <div class="tip" id="5">
+            <strong>Signature:</strong> x:NotifyCollectionChangedEventArgs -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L31-31" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Returns true if the NotifyCollectionChangedEventArgs represents an addition or a removal</p>
+
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '6', 6)" onmouseover="showTip(event, '6', 6)">
-            tracefn format
+            toAddOrRemove x
           </code>
           <div class="tip" id="6">
-            <strong>Signature:</strong> format:StringFormat&lt;&#39;?6967,unit&gt; -&gt; &#39;?6967<br />
-                          <strong>Type parameters:</strong> '?6967          </div>
+            <strong>Signature:</strong> x:NotifyCollectionChangedEventArgs -&gt; CollectionChanged&lt;&#39;a&gt; option<br />
+                          <strong>Type parameters:</strong> 'a          </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L16-16" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L38-38" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Converts NotifyCollectionChangedEventArgs to CollectionChanged<'a></p>
+
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '7', 7)" onmouseover="showTip(event, '7', 7)">
-            traceid x
+            tracefn format
           </code>
           <div class="tip" id="7">
+            <strong>Signature:</strong> format:StringFormat&lt;&#39;?6963,unit&gt; -&gt; &#39;?6963<br />
+                          <strong>Type parameters:</strong> '?6963          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L20-20" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>printf-ish Trace.Writeline</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '8', 8)" onmouseover="showTip(event, '8', 8)">
+            traceid x
+          </code>
+          <div class="tip" id="8">
             <strong>Signature:</strong> x:&#39;a -&gt; &#39;a<br />
                           <strong>Type parameters:</strong> 'a          </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L18-18" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/Utils.fs#L23-23" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>trace a value, then return it</p>
+
+
+
         </td>
       </tr>
     </tbody>

@@ -50,15 +50,51 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
             new(elt, m)
           </code>
-          <div class="tip" id="34">
+          <div class="tip" id="27">
             <strong>Signature:</strong> (elt:&#39;Element * m:&#39;Model) -&gt; View&lt;&#39;Event,&#39;Element,&#39;Model&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L24-24" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L37-37" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
+            new(m)
+          </code>
+          <div class="tip" id="28">
+            <strong>Signature:</strong> m:&#39;Model -&gt; IViewWithModel&lt;&#39;Event,&#39;Model&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L29-29" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            new()
+          </code>
+          <div class="tip" id="29">
+            <strong>Signature:</strong> unit -&gt; IView&lt;&#39;Event&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L11-11" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -76,6 +112,109 @@
       <tr>
         <td class="member-name">
 
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            ComposeView(v)
+          </code>
+          <div class="tip" id="30">
+            <strong>Signature:</strong> v:&#39;SubView -&gt; &#39;SubView<br />
+                          <strong>Type parameters:</strong> 'SubModel          </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L16-16" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Compose a subview in the current view</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+            composeViewEvent
+          </code>
+          <div class="tip" id="31">
+            <strong>Signature:</strong> Event&lt;IView&lt;&#39;Event&gt;&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L13-13" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>event fired when a sub-view is composed</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+            Events
+          </code>
+          <div class="tip" id="32">
+            <strong>Signature:</strong> IObservable&lt;&#39;Event&gt;<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L24-24" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The merged event observable</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
+            EventStreams
+          </code>
+          <div class="tip" id="33">
+            <strong>Signature:</strong> IObservable&lt;&#39;Event&gt; list<br />
+              <strong>Modifiers:</strong> abstract<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L22-22" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>List of event observable sources, subscribed to by the dispatcher</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+            Model
+          </code>
+          <div class="tip" id="34">
+            <strong>Signature:</strong> &#39;Model<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L31-31" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
           <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
             Root
           </code>
@@ -84,11 +223,36 @@
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L26-26" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L40-40" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>The visual element</p>
+
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+            SetBindings(arg1)
+          </code>
+          <div class="tip" id="36">
+            <strong>Signature:</strong> &#39;Model -&gt; unit<br />
+              <strong>Modifiers:</strong> abstract<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/View.fs#L33-33" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Will subscribe to the model's changed, typically on its ReactiveProperties</p>
+
+
+
         </td>
       </tr>
     </tbody>

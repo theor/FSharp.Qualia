@@ -40,6 +40,11 @@
   <span>Namespace: FSharp.Qualia</span><br />
 </p>
 <div class="xmldoc">
+<p>Collection based on a source observable collection, with a mapping function.
+Each modification to the source collection will be reflected on the derived one.
+Replace, Move and Reset events are not handled correctly at the time.</p>
+
+
 </div>
   <h3>Constructors</h3>
   <table class="table table-bordered member-list">
@@ -50,15 +55,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+          <code onmouseout="hideTip(event, '16', 16)" onmouseover="showTip(event, '16', 16)">
             new(src, f)
           </code>
-          <div class="tip" id="14">
+          <div class="tip" id="16">
             <strong>Signature:</strong> (src:ObservableCollection&lt;&#39;a&gt; * f:(&#39;a -&gt; &#39;b)) -&gt; DerivedCollection&lt;&#39;a,&#39;b&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/DerivedCollection.fs#L7-7" class="github-link">
+            <a href="http://github.com/theor/FSharp.Qualia/tree/master/src/FSharp.Qualia/DerivedCollection.fs#L10-10" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
