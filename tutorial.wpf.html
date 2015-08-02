@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Tutorial - WinForms
+    <title>Tutorial - WPF
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Event stream/rx based UI Framework and architecture"/>
@@ -33,7 +33,7 @@
       <div class="row">
         <div class="span9" id="main">
           
-<h1><a name="Tutorial-WinForms" class="anchor" href="#Tutorial-WinForms">Tutorial - WinForms</a></h1>
+<h1><a name="Tutorial-WPF" class="anchor" href="#Tutorial-WPF">Tutorial - WPF</a></h1>
 
 <p>A minimal Qualia app needs 5 types:</p>
 
@@ -42,7 +42,7 @@
 <li>a model, with reactive properties</li>
 <li>a view, usually linked to a WinForms or WPF window, listening to the model changes and send events</li>
 <li>a dispatcher, handling these events and transforming the model</li>
-<li>an event loop, wiring all previous types</li>
+<li>an event loop, wiring all previous types. This one is already defined in the library</li>
 </ul>
 
 <p>The example is a simple winforms numeric up down. The final app will look like this:</p>
@@ -90,7 +90,7 @@ ReactiveProperty is basically a wrapper around Rx BehaviorSubject. It's an IObse
 </tr>
 </table>
 
-<h3><a name="View" class="anchor" href="#View">View</a></h3>
+<h3><a name="Winforms-View" class="anchor" href="#Winforms-View">Winforms View</a></h3>
 
 <p>The view is split in two parts: the form itself and the Qualia View.</p>
 
@@ -259,122 +259,20 @@ Each event can be handled synchronously or asynchronously. The Dispatcher method
 </tr>
 </table>
 
-<h2><a name="WPF-version" class="anchor" href="#WPF-version">WPF version</a></h2>
-
-<p>Let's convert the winforms app in a WPF one. We only need to replace the view.</p>
-
-<p>First, let's create a MainWindow.xaml file in the project, set it's type to Resource and put this in there :</p>
-
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
-<span class="l"> 2: </span>
-<span class="l"> 3: </span>
-<span class="l"> 4: </span>
-<span class="l"> 5: </span>
-<span class="l"> 6: </span>
-<span class="l"> 7: </span>
-<span class="l"> 8: </span>
-<span class="l"> 9: </span>
-<span class="l">10: </span>
-<span class="l">11: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="o">&lt;</span><span class="i">Window</span>
-    <span class="i">xmlns</span><span class="o">=</span><span class="s">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span>
-    <span class="i">xmlns</span><span class="o">:</span><span class="i">x</span><span class="o">=</span><span class="s">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span>
-    <span class="i">Title</span><span class="o">=</span><span class="s">&quot;WPF NumericUpDown&quot;</span> <span class="i">Height</span><span class="o">=</span><span class="s">&quot;200&quot;</span> <span class="i">Width</span><span class="o">=</span><span class="s">&quot;400&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="i">StackPanel</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="i">Label</span> <span class="i">x</span><span class="o">:</span><span class="i">Name</span><span class="o">=</span><span class="s">&quot;label&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="i">Button</span> <span class="i">x</span><span class="o">:</span><span class="i">Name</span><span class="o">=</span><span class="s">&quot;buttonUp&quot;</span><span class="o">&gt;</span><span class="o">+&lt;/</span><span class="i">Button</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="i">Button</span> <span class="i">x</span><span class="o">:</span><span class="i">Name</span><span class="o">=</span><span class="s">&quot;buttonDown&quot;</span><span class="o">&gt;</span><span class="o">-&lt;/</span><span class="i">Button</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="i">TextBox</span> <span class="i">x</span><span class="o">:</span><span class="i">Name</span><span class="o">=</span><span class="s">&quot;textBox&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;/</span><span class="i">StackPanel</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="i">Window</span><span class="o">&gt;</span>
-</code></pre></td>
-</tr>
-</table>
-
-<p>We then use FsXaml to define a type for the window, allowing us to access to named elements :</p>
-
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-<span class="l">2: </span>
-<span class="l">3: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span class="i">FsXaml</span>
-
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs81', 183)" onmouseover="showTip(event, 'fs81', 183)" class="t">MainWindow</span> <span class="o">=</span> <span class="i">XAML</span><span class="o">&lt;</span><span class="s">&quot;MainWindow.xaml&quot;</span>, <span class="k">true</span><span class="o">&gt;</span>
-</code></pre></td>
-</tr>
-</table>
-
-<p>The view:</p>
-
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
-<span class="l"> 2: </span>
-<span class="l"> 3: </span>
-<span class="l"> 4: </span>
-<span class="l"> 5: </span>
-<span class="l"> 6: </span>
-<span class="l"> 7: </span>
-<span class="l"> 8: </span>
-<span class="l"> 9: </span>
-<span class="l">10: </span>
-<span class="l">11: </span>
-<span class="l">12: </span>
-<span class="l">13: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs82', 184)" onmouseover="showTip(event, 'fs82', 184)" class="t">MainWPFView</span>(<span onmouseout="hideTip(event, 'fs83', 185)" onmouseover="showTip(event, 'fs83', 185)" class="i">mw</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs81', 186)" onmouseover="showTip(event, 'fs81', 186)" class="t">MainWindow</span>, <span onmouseout="hideTip(event, 'fs84', 187)" onmouseover="showTip(event, 'fs84', 187)" class="i">m</span>) <span class="o">=</span> 
-    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs42', 188)" onmouseover="showTip(event, 'fs42', 188)" class="t">View</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 189)" onmouseover="showTip(event, 'fs6', 189)" class="t">MainEvents</span>, <span class="i">Window</span>, <span onmouseout="hideTip(event, 'fs11', 190)" onmouseover="showTip(event, 'fs11', 190)" class="i">MainModel</span><span class="o">&gt;</span>(<span class="i">mw</span><span class="o">.</span><span class="i">Root</span>, <span class="i">m</span>)
-    
-    <span class="k">override</span> <span class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs85', 191)" onmouseover="showTip(event, 'fs85', 191)" class="i">EventStreams</span> <span class="o">=</span> 
-        [ <span class="i">mw</span><span class="o">.</span><span class="i">buttonUp</span><span class="o">.</span><span class="i">Click</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 192)" onmouseover="showTip(event, 'fs46', 192)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 193)" onmouseover="showTip(event, 'fs47', 193)" class="i">mapTo</span> <span onmouseout="hideTip(event, 'fs7', 194)" onmouseover="showTip(event, 'fs7', 194)" class="i">Up</span>
-          <span class="i">mw</span><span class="o">.</span><span class="i">buttonDown</span><span class="o">.</span><span class="i">Click</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 195)" onmouseover="showTip(event, 'fs46', 195)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 196)" onmouseover="showTip(event, 'fs47', 196)" class="i">mapTo</span> <span onmouseout="hideTip(event, 'fs8', 197)" onmouseover="showTip(event, 'fs8', 197)" class="i">Down</span>
-          <span class="i">mw</span><span class="o">.</span><span class="i">textBox</span><span class="o">.</span><span class="i">TextChanged</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs46', 198)" onmouseover="showTip(event, 'fs46', 198)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 199)" onmouseover="showTip(event, 'fs49', 199)" class="i">map</span> (<span class="k">fun</span> <span class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 200)" onmouseover="showTip(event, 'fs9', 200)" class="i">Edit</span> <span class="i">mw</span><span class="o">.</span><span class="i">textBox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 201)" onmouseover="showTip(event, 'fs27', 201)" class="i">Text</span>) ]
-    
-    <span class="k">override</span> <span class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs86', 202)" onmouseover="showTip(event, 'fs86', 202)" class="f">SetBindings</span>(<span class="i">m</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs11', 203)" onmouseover="showTip(event, 'fs11', 203)" class="t">MainModel</span>) <span class="o">=</span> 
-        <span class="i">m</span><span class="o">.</span><span class="i">Value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 204)" onmouseover="showTip(event, 'fs87', 204)" class="i">Add</span>(<span class="k">fun</span> <span class="i">v</span> <span class="k">-&gt;</span> <span class="i">mw</span><span class="o">.</span><span class="i">label</span><span class="o">.</span><span class="i">Content</span> <span class="o">&lt;-</span> <span class="i">v</span>)
-        <span class="i">m</span><span class="o">.</span><span class="i">Value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 205)" onmouseover="showTip(event, 'fs87', 205)" class="i">Add</span>(<span class="k">fun</span> <span class="i">v</span> <span class="k">-&gt;</span> <span class="i">mw</span><span class="o">.</span><span class="i">textBox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 206)" onmouseover="showTip(event, 'fs27', 206)" class="i">Text</span> <span class="o">&lt;-</span> (<span onmouseout="hideTip(event, 'fs10', 207)" onmouseover="showTip(event, 'fs10', 207)" class="i">string</span> <span class="i">v</span>))
-
-        
-</code></pre></td>
-</tr>
-</table>
-
-<p>Now the main function, running a WPF System.Windows.Application:</p>
-
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-<span class="l">2: </span>
-<span class="l">3: </span>
-<span class="l">4: </span>
-<span class="l">5: </span>
-<span class="l">6: </span>
-<span class="l">7: </span>
-<span class="l">8: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span onmouseout="hideTip(event, 'fs69', 208)" onmouseover="showTip(event, 'fs69', 208)" class="t">STAThread</span>&gt;]
-[&lt;<span onmouseout="hideTip(event, 'fs70', 209)" onmouseover="showTip(event, 'fs70', 209)" class="t">EntryPoint</span>&gt;]
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs71', 210)" onmouseover="showTip(event, 'fs71', 210)" class="f">main</span> <span onmouseout="hideTip(event, 'fs72', 211)" onmouseover="showTip(event, 'fs72', 211)" class="i">argv</span> <span class="o">=</span> 
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs88', 212)" onmouseover="showTip(event, 'fs88', 212)" class="i">app</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs89', 213)" onmouseover="showTip(event, 'fs89', 213)" class="i">Application</span>()
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs90', 214)" onmouseover="showTip(event, 'fs90', 214)" class="i">v</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs39', 215)" onmouseover="showTip(event, 'fs39', 215)" class="t">MainView</span>(<span onmouseout="hideTip(event, 'fs81', 216)" onmouseover="showTip(event, 'fs81', 216)" class="t">MainWindow</span>(), <span onmouseout="hideTip(event, 'fs11', 217)" onmouseover="showTip(event, 'fs11', 217)" class="t">MainModel</span>())
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs91', 218)" onmouseover="showTip(event, 'fs91', 218)" class="i">mvc</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs75', 219)" onmouseover="showTip(event, 'fs75', 219)" class="t">EventLoop</span>(<span onmouseout="hideTip(event, 'fs90', 220)" onmouseover="showTip(event, 'fs90', 220)" class="i">v</span>, <span onmouseout="hideTip(event, 'fs56', 221)" onmouseover="showTip(event, 'fs56', 221)" class="t">MainDispatcher</span>())
-    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs76', 222)" onmouseover="showTip(event, 'fs76', 222)" class="i">eventloop</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs91', 223)" onmouseover="showTip(event, 'fs91', 223)" class="i">mvc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs77', 224)" onmouseover="showTip(event, 'fs77', 224)" class="f">Start</span>()
-    <span onmouseout="hideTip(event, 'fs88', 225)" onmouseover="showTip(event, 'fs88', 225)" class="i">app</span><span class="o">.</span><span class="i">Run</span>(<span class="i">window</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs90', 226)" onmouseover="showTip(event, 'fs90', 226)" class="i">v</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs92', 227)" onmouseover="showTip(event, 'fs92', 227)" class="i">Root</span>)
-</code></pre></td>
-</tr>
-</table>
-
 <div class="tip" id="fs1">namespace System</div>
 <div class="tip" id="fs2">namespace System.Windows</div>
 <div class="tip" id="fs3">namespace System.Windows.Forms</div>
 <div class="tip" id="fs4">namespace FSharp</div>
 <div class="tip" id="fs5">namespace FSharp.Qualia</div>
-<div class="tip" id="fs6">type MainEvents =<br />&#160;&#160;| Up<br />&#160;&#160;| Down<br />&#160;&#160;| Edit of string<br /><br />Full name: Tutorial.MainEvents</div>
+<div class="tip" id="fs6">type MainEvents =<br />&#160;&#160;| Up<br />&#160;&#160;| Down<br />&#160;&#160;| Edit of string<br /><br />Full name: Tutorial.wpf.MainEvents</div>
 <div class="tip" id="fs7">union case MainEvents.Up: MainEvents</div>
 <div class="tip" id="fs8">union case MainEvents.Down: MainEvents</div>
 <div class="tip" id="fs9">union case MainEvents.Edit: string -&gt; MainEvents</div>
 <div class="tip" id="fs10">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
-<div class="tip" id="fs11">Multiple items<br />type MainModel =<br />&#160;&#160;new : unit -&gt; MainModel<br />&#160;&#160;member Value : ReactiveProperty&lt;int&gt;<br /><br />Full name: Tutorial.MainModel<br /><br />--------------------<br />new : unit -&gt; MainModel</div>
+<div class="tip" id="fs11">Multiple items<br />type MainModel =<br />&#160;&#160;new : unit -&gt; MainModel<br />&#160;&#160;member Value : ReactiveProperty&lt;int&gt;<br /><br />Full name: Tutorial.wpf.MainModel<br /><br />--------------------<br />new : unit -&gt; MainModel</div>
 <div class="tip" id="fs12">Multiple items<br />type ReactiveProperty&lt;&#39;a&gt; =<br />&#160;&#160;interface IObservable&lt;&#39;a&gt;<br />&#160;&#160;new : init:&#39;a -&gt; ReactiveProperty&lt;&#39;a&gt;<br />&#160;&#160;new : source:IObservable&lt;&#39;a&gt; * init:&#39;a -&gt; ReactiveProperty&lt;&#39;a&gt;<br />&#160;&#160;override ToString : unit -&gt; string<br />&#160;&#160;member Value : &#39;a<br />&#160;&#160;member private sub : BehaviorSubject&lt;&#39;a&gt;<br />&#160;&#160;member Value : &#39;a with set<br /><br />Full name: FSharp.Qualia.ReactiveProperty&lt;_&gt;<br /><br />--------------------<br />new : init:&#39;a -&gt; ReactiveProperty&lt;&#39;a&gt;<br />new : source:IObservable&lt;&#39;a&gt; * init:&#39;a -&gt; ReactiveProperty&lt;&#39;a&gt;</div>
 <div class="tip" id="fs13">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
-<div class="tip" id="fs14">Multiple items<br />type MainForm =<br />&#160;&#160;inherit Form<br />&#160;&#160;new : unit -&gt; MainForm<br />&#160;&#160;override OnLoad : e:EventArgs -&gt; unit<br />&#160;&#160;member ButtonDown : Button<br />&#160;&#160;member ButtonUp : Button<br />&#160;&#160;member Label : Label<br />&#160;&#160;member TextBox : TextBox<br /><br />Full name: Tutorial.MainForm<br /><br />--------------------<br />new : unit -&gt; MainForm</div>
+<div class="tip" id="fs14">Multiple items<br />type MainForm =<br />&#160;&#160;inherit Form<br />&#160;&#160;new : unit -&gt; MainForm<br />&#160;&#160;override OnLoad : e:EventArgs -&gt; unit<br />&#160;&#160;member ButtonDown : Button<br />&#160;&#160;member ButtonUp : Button<br />&#160;&#160;member Label : Label<br />&#160;&#160;member TextBox : TextBox<br /><br />Full name: Tutorial.wpf.MainForm<br /><br />--------------------<br />new : unit -&gt; MainForm</div>
 <div class="tip" id="fs15">Multiple items<br />type Form =<br />&#160;&#160;inherit ContainerControl<br />&#160;&#160;new : unit -&gt; Form<br />&#160;&#160;member AcceptButton : IButtonControl with get, set<br />&#160;&#160;member Activate : unit -&gt; unit<br />&#160;&#160;member ActiveMdiChild : Form<br />&#160;&#160;member AddOwnedForm : ownedForm:Form -&gt; unit<br />&#160;&#160;member AllowTransparency : bool with get, set<br />&#160;&#160;member AutoScale : bool with get, set<br />&#160;&#160;member AutoScaleBaseSize : Size with get, set<br />&#160;&#160;member AutoScroll : bool with get, set<br />&#160;&#160;member AutoSize : bool with get, set<br />&#160;&#160;...<br />&#160;&#160;nested type ControlCollection<br /><br />Full name: System.Windows.Forms.Form<br /><br />--------------------<br />Form() : unit</div>
 <div class="tip" id="fs16">val p : TableLayoutPanel</div>
 <div class="tip" id="fs17">Multiple items<br />type TableLayoutPanel =<br />&#160;&#160;inherit Panel<br />&#160;&#160;new : unit -&gt; TableLayoutPanel<br />&#160;&#160;member BorderStyle : BorderStyle with get, set<br />&#160;&#160;member CellBorderStyle : TableLayoutPanelCellBorderStyle with get, set<br />&#160;&#160;member ColumnCount : int with get, set<br />&#160;&#160;member ColumnStyles : TableLayoutColumnStyleCollection<br />&#160;&#160;member Controls : TableLayoutControlCollection<br />&#160;&#160;member GetCellPosition : control:Control -&gt; TableLayoutPanelCellPosition<br />&#160;&#160;member GetColumn : control:Control -&gt; int<br />&#160;&#160;member GetColumnSpan : control:Control -&gt; int<br />&#160;&#160;member GetColumnWidths : unit -&gt; int[]<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.TableLayoutPanel<br /><br />--------------------<br />TableLayoutPanel() : unit</div>
@@ -391,7 +289,7 @@ Each event can be handled synchronously or asynchronously. The Dispatcher method
 <div class="tip" id="fs28">Multiple items<br />type TextBox =<br />&#160;&#160;inherit TextBoxBase<br />&#160;&#160;new : unit -&gt; TextBox<br />&#160;&#160;member AcceptsReturn : bool with get, set<br />&#160;&#160;member AutoCompleteCustomSource : AutoCompleteStringCollection with get, set<br />&#160;&#160;member AutoCompleteMode : AutoCompleteMode with get, set<br />&#160;&#160;member AutoCompleteSource : AutoCompleteSource with get, set<br />&#160;&#160;member CharacterCasing : CharacterCasing with get, set<br />&#160;&#160;member Multiline : bool with get, set<br />&#160;&#160;member PasswordChar : char with get, set<br />&#160;&#160;member Paste : text:string -&gt; unit<br />&#160;&#160;member ScrollBars : ScrollBars with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.TextBox<br /><br />--------------------<br />TextBox() : unit</div>
 <div class="tip" id="fs29">Multiple items<br />type Label =<br />&#160;&#160;inherit Control<br />&#160;&#160;new : unit -&gt; Label<br />&#160;&#160;member AutoEllipsis : bool with get, set<br />&#160;&#160;member AutoSize : bool with get, set<br />&#160;&#160;member BackgroundImage : Image with get, set<br />&#160;&#160;member BackgroundImageLayout : ImageLayout with get, set<br />&#160;&#160;member BorderStyle : BorderStyle with get, set<br />&#160;&#160;member FlatStyle : FlatStyle with get, set<br />&#160;&#160;member GetPreferredSize : proposedSize:Size -&gt; Size<br />&#160;&#160;member Image : Image with get, set<br />&#160;&#160;member ImageAlign : ContentAlignment with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.Label<br /><br />--------------------<br />Label() : unit</div>
 <div class="tip" id="fs30">val x : MainForm</div>
-<div class="tip" id="fs31">override MainForm.OnLoad : e:EventArgs -&gt; unit<br /><br />Full name: Tutorial.MainForm.OnLoad</div>
+<div class="tip" id="fs31">override MainForm.OnLoad : e:EventArgs -&gt; unit<br /><br />Full name: Tutorial.wpf.MainForm.OnLoad</div>
 <div class="tip" id="fs32">val e : EventArgs</div>
 <div class="tip" id="fs33">property Control.Controls: Control.ControlCollection</div>
 <div class="tip" id="fs34">Control.ControlCollection.Add(value: Control) : unit</div>
@@ -399,24 +297,24 @@ Each event can be handled synchronously or asynchronously. The Dispatcher method
 <div class="tip" id="fs36">property MainForm.ButtonDown: Button</div>
 <div class="tip" id="fs37">property MainForm.TextBox: TextBox</div>
 <div class="tip" id="fs38">property MainForm.Label: Label</div>
-<div class="tip" id="fs39">Multiple items<br />type MainView =<br />&#160;&#160;inherit View&lt;MainEvents,Form,MainModel&gt;<br />&#160;&#160;new : mw:MainForm * m:MainModel -&gt; MainView<br />&#160;&#160;override SetBindings : m:MainModel -&gt; unit<br />&#160;&#160;override EventStreams : IObservable&lt;MainEvents&gt; list<br /><br />Full name: Tutorial.MainView<br /><br />--------------------<br />new : mw:MainForm * m:MainModel -&gt; MainView</div>
+<div class="tip" id="fs39">Multiple items<br />type MainView =<br />&#160;&#160;inherit View&lt;MainEvents,Form,MainModel&gt;<br />&#160;&#160;new : mw:MainForm * m:MainModel -&gt; MainView<br />&#160;&#160;override SetBindings : m:MainModel -&gt; unit<br />&#160;&#160;override EventStreams : IObservable&lt;MainEvents&gt; list<br /><br />Full name: Tutorial.wpf.MainView<br /><br />--------------------<br />new : mw:MainForm * m:MainModel -&gt; MainView</div>
 <div class="tip" id="fs40">val mw : MainForm</div>
 <div class="tip" id="fs41">val m : MainModel</div>
 <div class="tip" id="fs42">Multiple items<br />type View =<br />&#160;&#160;| LargeIcon = 0<br />&#160;&#160;| Details = 1<br />&#160;&#160;| SmallIcon = 2<br />&#160;&#160;| List = 3<br />&#160;&#160;| Tile = 4<br /><br />Full name: System.Windows.Forms.View<br /><br />--------------------<br />type View&lt;&#39;Event,&#39;Element,&#39;Model&gt; =<br />&#160;&#160;inherit IViewWithModel&lt;&#39;Event,&#39;Model&gt;<br />&#160;&#160;new : elt:&#39;Element * m:&#39;Model -&gt; View&lt;&#39;Event,&#39;Element,&#39;Model&gt;<br />&#160;&#160;member Root : &#39;Element<br /><br />Full name: FSharp.Qualia.View&lt;_,_,_&gt;<br /><br />--------------------<br />new : elt:&#39;Element * m:&#39;Model -&gt; View&lt;&#39;Event,&#39;Element,&#39;Model&gt;</div>
 <div class="tip" id="fs43">val this : MainView</div>
-<div class="tip" id="fs44">override MainView.EventStreams : IObservable&lt;MainEvents&gt; list<br /><br />Full name: Tutorial.MainView.EventStreams</div>
+<div class="tip" id="fs44">override MainView.EventStreams : IObservable&lt;MainEvents&gt; list<br /><br />Full name: Tutorial.wpf.MainView.EventStreams</div>
 <div class="tip" id="fs45">event Control.Click: IEvent&lt;EventHandler,EventArgs&gt;</div>
 <div class="tip" id="fs46">Multiple items<br />module Observable<br /><br />from FSharp.Qualia<br /><br />--------------------<br />module Observable<br /><br />from Microsoft.FSharp.Control</div>
 <div class="tip" id="fs47">val mapTo : value:&#39;a -&gt; (IObservable&lt;&#39;b&gt; -&gt; IObservable&lt;&#39;a&gt;)<br /><br />Full name: FSharp.Qualia.Observable.mapTo</div>
 <div class="tip" id="fs48">event Control.TextChanged: IEvent&lt;EventHandler,EventArgs&gt;</div>
 <div class="tip" id="fs49">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.map</div>
 <div class="tip" id="fs50">property TextBox.Text: string</div>
-<div class="tip" id="fs51">override MainView.SetBindings : m:MainModel -&gt; unit<br /><br />Full name: Tutorial.MainView.SetBindings</div>
+<div class="tip" id="fs51">override MainView.SetBindings : m:MainModel -&gt; unit<br /><br />Full name: Tutorial.wpf.MainView.SetBindings</div>
 <div class="tip" id="fs52">property MainModel.Value: ReactiveProperty&lt;int&gt;</div>
 <div class="tip" id="fs53">member IObservable.Add : callback:(&#39;T -&gt; unit) -&gt; unit</div>
 <div class="tip" id="fs54">val v : int</div>
 <div class="tip" id="fs55">property Label.Text: string</div>
-<div class="tip" id="fs56">Multiple items<br />type MainDispatcher =<br />&#160;&#160;interface IDispatcher&lt;MainEvents,MainModel&gt;<br />&#160;&#160;new : unit -&gt; MainDispatcher<br /><br />Full name: Tutorial.MainDispatcher<br /><br />--------------------<br />new : unit -&gt; MainDispatcher</div>
+<div class="tip" id="fs56">Multiple items<br />type MainDispatcher =<br />&#160;&#160;interface IDispatcher&lt;MainEvents,MainModel&gt;<br />&#160;&#160;new : unit -&gt; MainDispatcher<br /><br />Full name: Tutorial.wpf.MainDispatcher<br /><br />--------------------<br />new : unit -&gt; MainDispatcher</div>
 <div class="tip" id="fs57">val up : (MainModel -&gt; unit)</div>
 <div class="tip" id="fs58">property ReactiveProperty.Value: int</div>
 <div class="tip" id="fs59">val down : (MainModel -&gt; unit)</div>
@@ -426,12 +324,12 @@ Each event can be handled synchronously or asynchronously. The Dispatcher method
 <div class="tip" id="fs63">Int32.TryParse(s: string, result: byref&lt;int&gt;) : bool<br />Int32.TryParse(s: string, style: Globalization.NumberStyles, provider: IFormatProvider, result: byref&lt;int&gt;) : bool</div>
 <div class="tip" id="fs64">type IDispatcher&lt;&#39;Event,&#39;Model&gt; =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member InitModel : &#39;Model -&gt; unit<br />&#160;&#160;&#160;&#160;abstract member Dispatcher : (&#39;Event -&gt; EventHandler&lt;&#39;Model&gt;)<br />&#160;&#160;end<br /><br />Full name: FSharp.Qualia.IDispatcher&lt;_,_&gt;</div>
 <div class="tip" id="fs65">val this : MainDispatcher</div>
-<div class="tip" id="fs66">override MainDispatcher.InitModel : MainModel -&gt; unit<br /><br />Full name: Tutorial.MainDispatcher.InitModel</div>
-<div class="tip" id="fs67">override MainDispatcher.Dispatcher : (MainEvents -&gt; EventHandler&lt;MainModel&gt;)<br /><br />Full name: Tutorial.MainDispatcher.Dispatcher</div>
+<div class="tip" id="fs66">override MainDispatcher.InitModel : MainModel -&gt; unit<br /><br />Full name: Tutorial.wpf.MainDispatcher.InitModel</div>
+<div class="tip" id="fs67">override MainDispatcher.Dispatcher : (MainEvents -&gt; EventHandler&lt;MainModel&gt;)<br /><br />Full name: Tutorial.wpf.MainDispatcher.Dispatcher</div>
 <div class="tip" id="fs68">union case EventHandler.Sync: (&#39;Model -&gt; unit) -&gt; EventHandler&lt;&#39;Model&gt;</div>
 <div class="tip" id="fs69">Multiple items<br />type STAThreadAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; STAThreadAttribute<br /><br />Full name: System.STAThreadAttribute<br /><br />--------------------<br />STAThreadAttribute() : unit</div>
 <div class="tip" id="fs70">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
-<div class="tip" id="fs71">val main : argv:string [] -&gt; int<br /><br />Full name: Tutorial.main</div>
+<div class="tip" id="fs71">val main : argv:string [] -&gt; int<br /><br />Full name: Tutorial.wpf.main</div>
 <div class="tip" id="fs72">val argv : string []</div>
 <div class="tip" id="fs73">val v : MainView</div>
 <div class="tip" id="fs74">val mvc : EventLoop&lt;MainModel,MainEvents,Form&gt;</div>
@@ -441,18 +339,6 @@ Each event can be handled synchronously or asynchronously. The Dispatcher method
 <div class="tip" id="fs78">property View.Root: Form</div>
 <div class="tip" id="fs79">Form.ShowDialog() : DialogResult<br />Form.ShowDialog(owner: IWin32Window) : DialogResult</div>
 <div class="tip" id="fs80">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
-<div class="tip" id="fs81">type MainWindow = obj<br /><br />Full name: Tutorial.MainWindow</div>
-<div class="tip" id="fs82">Multiple items<br />type MainWPFView =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : mw:MainWindow * m:&#39;a -&gt; MainWPFView<br />&#160;&#160;override SetBindings : m:MainModel -&gt; &#39;a<br />&#160;&#160;override EventStreams : &#39;a<br /><br />Full name: Tutorial.MainWPFView<br /><br />--------------------<br />new : mw:MainWindow * m:&#39;a -&gt; MainWPFView</div>
-<div class="tip" id="fs83">val mw : MainWindow</div>
-<div class="tip" id="fs84">val m : &#39;a</div>
-<div class="tip" id="fs85">override MainWPFView.EventStreams : &#39;a<br /><br />Full name: Tutorial.MainWPFView.EventStreams</div>
-<div class="tip" id="fs86">override MainWPFView.SetBindings : m:MainModel -&gt; &#39;a<br /><br />Full name: Tutorial.MainWPFView.SetBindings</div>
-<div class="tip" id="fs87">union case CollectionChanged.Add: seq&lt;&#39;a&gt; -&gt; CollectionChanged&lt;&#39;a&gt;</div>
-<div class="tip" id="fs88">val app : obj</div>
-<div class="tip" id="fs89">type Application =<br />&#160;&#160;static member AddMessageFilter : value:IMessageFilter -&gt; unit<br />&#160;&#160;static member AllowQuit : bool<br />&#160;&#160;static member CommonAppDataPath : string<br />&#160;&#160;static member CommonAppDataRegistry : RegistryKey<br />&#160;&#160;static member CompanyName : string<br />&#160;&#160;static member CurrentCulture : CultureInfo with get, set<br />&#160;&#160;static member CurrentInputLanguage : InputLanguage with get, set<br />&#160;&#160;static member DoEvents : unit -&gt; unit<br />&#160;&#160;static member EnableVisualStyles : unit -&gt; unit<br />&#160;&#160;static member ExecutablePath : string<br />&#160;&#160;...<br />&#160;&#160;nested type MessageLoopCallback<br /><br />Full name: System.Windows.Forms.Application</div>
-<div class="tip" id="fs90">val v : View&lt;MainEvents,obj,MainModel&gt;</div>
-<div class="tip" id="fs91">val mvc : EventLoop&lt;MainModel,MainEvents,obj&gt;</div>
-<div class="tip" id="fs92">property View.Root: obj</div>
 
         </div>
         <div class="span3">
