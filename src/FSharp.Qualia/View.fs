@@ -2,8 +2,6 @@
 
 open System
 open System.Collections.ObjectModel
-open System.Reactive.Linq
-
 
 [<AbstractClass>]
 /// [omit]
@@ -20,8 +18,6 @@ type IView<'Event>() =
     
     /// List of event observable sources, subscribed to by the dispatcher
     abstract EventStreams : IObservable<'Event> list
-    /// The merged event observable
-    member this.Events = this.EventStreams.Merge()
 
 and [<AbstractClass>]
     /// [omit]

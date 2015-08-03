@@ -2,6 +2,7 @@
 
 open System.Reactive
 open System.Reactive.Subjects
+open System.Reactive.Linq
 
 /// Event handlers are either synchronous or asynchronous
 type EventHandler<'Model> = 
@@ -29,7 +30,9 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     do 
         let subscribe (e : IView<'Event>) = 
             tracefn "COMPOSE %A" e
-//            e.Events.Subscribe hub |> ignore
+            if not e.EventStreams.IsEmpty then
+                let merged = e.EventStreams.Merge()
+                merged.Subscribe hub |> ignore
         v.composeViewEvent.Publish
         |> Observable.subscribe subscribe
         |> ignore
@@ -38,8 +41,8 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     member this.Start() = 
         c.InitModel v.Model
         v.SetBindings(v.Model)
-        let ev = v.Events |> Observable.map (traceidf "EV MAP %A" )
-        ev.Subscribe hub |> ignore
+        if not v.EventStreams.IsEmpty then
+            v.EventStreams.Merge().Subscribe hub |> ignore
         Observer.Create
             (fun e -> 
             match c.Dispatcher e with
