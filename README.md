@@ -1,6 +1,6 @@
 [![Issue Stats](http://issuestats.com/github/theor/FSharp.Qualia/badge/issue)](http://issuestats.com/github/theor/FSharp.Qualia)
 [![Issue Stats](http://issuestats.com/github/theor/FSharp.Qualia/badge/pr)](http://issuestats.com/github/theor/FSharp.Qualia)
-
+[![Build status](https://ci.appveyor.com/api/projects/status/ir8thdptylo1w4w2?svg=true)](https://ci.appveyor.com/project/theor/fsharp-qualia)
 # FSharp.Qualia
 
 [http://theor.github.io/FSharp.Qualia/](http://theor.github.io/FSharp.Qualia/)
