@@ -90,7 +90,6 @@ type MainForm() =
 
 (**
 #### Qualia View
-The actual Form backing the view. all exposed members will be used by the view.
 Qualia Views are templated with three types : the event one, the visual element one and the model. 
 *)
 type MainView(mw : MainForm, m) = 
