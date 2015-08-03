@@ -29,7 +29,7 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     do 
         let subscribe (e : IView<'Event>) = 
             tracefn "COMPOSE %A" e
-            e.Events.Subscribe hub |> ignore
+//            e.Events.Subscribe hub |> ignore
         v.composeViewEvent.Publish
         |> Observable.subscribe subscribe
         |> ignore
@@ -38,7 +38,8 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     member this.Start() = 
         c.InitModel v.Model
         v.SetBindings(v.Model)
-        v.Events.Subscribe hub |> ignore
+        let ev = v.Events |> Observable.map (traceidf "EV MAP %A" )
+        ev.Subscribe hub |> ignore
         Observer.Create
             (fun e -> 
             match c.Dispatcher e with
