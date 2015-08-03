@@ -18,7 +18,10 @@ module internal Observer =
 module Utils =
     /// printf-ish Trace.Writeline
     let tracefn format = Printf.kprintf (System.Diagnostics.Trace.WriteLine) format
-
+    
+    let traceidf (s) (x : 'a) = 
+        tracefn s x
+        x
     /// trace a value, then return it
     let traceid (x : 'a) = 
         tracefn "%A" x
