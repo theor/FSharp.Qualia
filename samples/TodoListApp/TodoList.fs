@@ -11,7 +11,7 @@ open Types
 
 type Model() = 
     let items = new ObservableCollection<TodoItemModel>()
-    let collChanged = items.CollectionChanged |> Observable.filter Core.isAddOrRemove
+    let collChanged = items.CollectionChanged |> Observable.filter Utils.isAddOrRemove
     
     let totalCount = 
         collChanged
@@ -20,7 +20,7 @@ type Model() =
     
     let doneCount = 
         collChanged
-        |> Observable.choose Core.toAddOrRemove
+        |> Observable.choose Utils.toAddOrRemove
         |> Observable.map (fun _ -> 
                items
                |> Seq.filter (fun i -> i.Done.Value)

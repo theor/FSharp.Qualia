@@ -1,5 +1,6 @@
 ﻿namespace FSharp.Qualia.WPF
 
+/// Interop module with GongSolutions.Wpf.DragDrop
 module DragDrop =
 
     open GongSolutions.Wpf.DragDrop

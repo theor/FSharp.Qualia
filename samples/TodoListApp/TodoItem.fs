@@ -3,7 +3,6 @@
 open System.Windows
 open FsXaml
 open FSharp.Qualia
-open FSharp.Qualia.Core
 open Types
 type Control = XAML< "TodoItem.xaml", true >
     

@@ -45,14 +45,12 @@ type MainDispatcher() =
             | Down -> Sync down
             | Edit str -> Sync(edit str)
 
-let run(app:Application) =
-    let v = MainView(MainWindow(), MainModel())
-    let mvc = EventLoop(v, MainDispatcher())
-    use eventloop = mvc.Start()
-    app.Run(window = v.Root)
 
 [<STAThread>]
 [<EntryPoint>]
 let main argv = 
     let app = Application()
-    run app
+    let v = MainView(MainWindow(), MainModel())
+    let mvc = EventLoop(v, MainDispatcher())
+    use eventloop = mvc.Start()
+    app.Run(window = v.Root)

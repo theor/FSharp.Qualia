@@ -3,6 +3,7 @@
 open System.Reactive.Subjects
 open System
 
+/// Observable property holding the last value set. Setting the value will trigger an event in the embedded observable
 type ReactiveProperty<'a>(init:'a) =
     let mutable value = init
     do
@@ -23,4 +24,10 @@ type ReactiveProperty<'a>(init:'a) =
         ReactiveProperty(init)
         then
             source |> Observable.map (traceid)
-                    |> Observable.add (fun v -> x.Value <- v)
+                   |> Observable.add (fun v -> x.Value <- v)
+
+[<AutoOpen>]
+module ObservableExtensions = 
+    /// creates a ReactiveProperty from an observable, with an initial value
+    let toProperty (init:'a) (source:IObservable<'a>) =
+        new ReactiveProperty<'a>(source, init)

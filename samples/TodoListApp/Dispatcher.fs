@@ -1,7 +1,6 @@
 ﻿module Dispatcher
 
 open FSharp.Qualia
-open FSharp.Qualia.Core
 open Types
 
 type T() = 
