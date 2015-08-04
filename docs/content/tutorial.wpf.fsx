@@ -23,14 +23,23 @@ open System.Windows
 open FSharp.Qualia
 open System.Collections.ObjectModel
 open System.Windows.Controls
+open FSharp.Qualia.WPF
 
 (**
 Collections
 ===================
 *)
 
-type Events = Add
+let cast<'a> (x:obj) : 'a option =
+    match x with
+    | :? 'a as y -> Some y
+    | _ -> None
 
+type Events = Add | Remove | SelectionChanged of ItemModel option
+
+and ItemModel(s) =
+    member val Text = ReactiveProperty(s)
+    override x.ToString() = x.Text.Value
 
 type ListViewWindow() as x =
     inherit Window()
@@ -39,41 +48,49 @@ type ListViewWindow() as x =
     let list = ListBox()
     do
         let sp = StackPanel()
+        sp.Children.Add button |> ignore
         sp.Children.Add label |> ignore
         sp.Children.Add list |> ignore
-        sp.Children.Add button |> ignore
         x.Content <- sp
     member val Label = label
     member val Button = button
     member val List = list
 
-type ItemModel() =
-    member val Text = ReactiveProperty("")
 
-type ItemView(elt, m) =
-    inherit View<Events, Label, ItemModel>(elt, m)
+type ItemView(m) =
+    inherit View<Events, Label, ItemModel>(Label(), m)
      override x.EventStreams = []
-     override x.SetBindings m = elt.Content <- m.Text.Value
+     override x.SetBindings m = x.Root.Content <- m.Text.Value
+
 type ListModel() =
     member val Items = new ObservableCollection<ItemModel>()
+    member val SelectedItem = new ReactiveProperty<ItemModel option>(None)
     
 type ListView(elt, m) =
-    inherit View<Events, ListViewWindow, ListModel>(elt, m)
-    override x.EventStreams = []
-    override x.SetBindings m = ()
+    inherit DerivedCollectionSourceView<Events, ListViewWindow, ListModel>(elt, m)
+
+    override x.EventStreams = [
+        elt.Button.Click --> Add
+        elt.List.SelectionChanged |> Observable.map (fun _ -> SelectionChanged((cast<ItemView> elt.List.SelectedItem |> Option.map(fun v -> v.Model))))]
+    override x.SetBindings m =
+        let collview = x.linkCollection elt.List (fun i -> ItemView(i)) m.Items
+        m.SelectedItem |> Observable.add (fun i -> elt.Label.Content <- sprintf "Selection: %A" i)
+        ()
 type ListController() =
     interface IDispatcher<Events,ListModel> with
         member this.InitModel m = ()
         member this.Dispatcher = 
             function
-            | Add -> Sync (fun m -> ())
+            | Add -> Sync (fun m -> m.Items.Add (ItemModel(sprintf "#%i" m.Items.Count)))
+            | Remove -> failwith "Not implemented yet"
+            | SelectionChanged item -> printfn "%A" item; Sync (fun m -> m.SelectedItem.Value <- item)
 
-let w = new ListViewWindow()
 let app = if Application.Current = null then Application() else Application.Current
 let lm = ListModel()
-let v = ListView(w,lm)
+let v = ListView(new ListViewWindow(),lm)
 let c = ListController()
 let loop = EventLoop(v, c)
 loop.Start()
-app.Run(w)
+app.Run(v.Root)
+app.Shutdown()
 
