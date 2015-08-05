@@ -291,6 +291,7 @@ Target "ReleaseDocs" (fun _ ->
     StageAll tempDocsDir
     Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
     Branches.push tempDocsDir
+    CleanDir tempDocsDir
 )
 
 #load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
