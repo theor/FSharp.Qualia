@@ -29,7 +29,7 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     
     do 
         let subscribe (e : IView<'Event>) = 
-            tracefn "COMPOSE %A" e
+//            tracefn "COMPOSE %A" e
             if not e.EventStreams.IsEmpty then
                 let merged = e.EventStreams.Merge()
                 merged.Subscribe hub |> ignore
