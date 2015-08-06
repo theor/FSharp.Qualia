@@ -1,3 +1,6 @@
+#### 0.1.2 - August 05 2015
+* bugfix: DerivedCollection events
+
 #### 0.1.1 - August 05 2015
 * Fixed release process producing bad nuget packages
 

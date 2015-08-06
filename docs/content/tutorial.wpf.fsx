@@ -112,7 +112,14 @@ type ListController() =
         member this.InitModel m = ()
         member this.Dispatcher = 
             function
-            | Add -> Sync (fun m -> m.Items.Add (ItemModel(sprintf "#%i" m.Items.Count)))
+//            | Add -> Async (fun m -> async { do m.Items.Add (ItemModel(sprintf "#%i" m.Items.Count)) })
+            | Add ->
+                let a = (fun (m:ListModel) -> async {
+                    do! Async.Sleep 1000
+                    do m.Items.Add (ItemModel(sprintf "#%i" m.Items.Count))
+                })
+                Async a
+//                Sync (Async.Start a)
             | Remove -> Sync (fun m -> m.SelectedItem.Value |> Option.iter (m.Items.Remove >> ignore))
             | SelectionChanged item -> printfn "%A" item; Sync (fun m -> m.SelectedItem.Value <- item)
 (**

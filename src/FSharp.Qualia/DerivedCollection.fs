@@ -20,9 +20,9 @@ type DerivedCollection<'a, 'b when 'a : equality and 'b : equality>(src:Observab
             let s = e.OldItems |> Seq.cast<'a>
             let mapped = s |> Seq.map (map.TryGetValue) |> Seq.filter fst
             mapped |> Seq.map snd |> Seq.iter (this.Remove >> ignore)
-//        | NotifyCollectionChangedAction.Replace -> ()
-//        | NotifyCollectionChangedAction.Move -> ()
-//        | NotifyCollectionChangedAction.Reset -> ()
+        | NotifyCollectionChangedAction.Replace -> ()
+        | NotifyCollectionChangedAction.Move -> ()
+        | NotifyCollectionChangedAction.Reset -> map.Clear(); this.Clear()
         | _ -> failwith "Not Implemented"
     do
         Seq.iter2 (fun a b -> map.Add(a,b)) src this
