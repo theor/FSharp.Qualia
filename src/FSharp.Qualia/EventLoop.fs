@@ -3,6 +3,10 @@
 open System.Reactive
 open System.Reactive.Subjects
 open System.Reactive.Linq
+open System.Reactive.Threading
+open System.Reactive.Concurrency
+open System.Threading
+open System
 
 /// Event handlers are either synchronous or asynchronous
 type EventHandler<'Model> = 
@@ -37,22 +41,26 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
         |> Observable.subscribe subscribe
         |> ignore
 
+    member x.Inject e = hub.OnNext e
+
     /// Starts the event loop - will init the model, set its bindings, subscribe to the views event streams and handle them
-    member this.Start() = 
+    member this.Start() = this.StartWithScheduler(fun x -> x())
+    member this.StartWithScheduler(f) = 
         c.InitModel v.Model
         v.SetBindings(v.Model)
+        let obs = 
+            Observer.Create(fun e -> 
+                match c.Dispatcher e with
+                | Sync eventHandler -> 
+                    try 
+                        f(fun () -> eventHandler v.Model)
+                    with why -> error (why, e)
+                | Async eventHandler -> 
+                    Async.StartWithContinuations
+                        (computation = eventHandler v.Model, continuation = ignore, exceptionContinuation = (fun why -> error(why,e)), 
+                            cancellationContinuation = ignore))
+            |> Observer.preventReentrancy
+            |> hub.Subscribe
         if not v.EventStreams.IsEmpty then
             v.EventStreams.Merge().Subscribe hub |> ignore
-        Observer.Create
-            (fun e -> 
-            match c.Dispatcher e with
-            | Sync eventHandler -> 
-                try 
-                    eventHandler v.Model
-                with why -> error (why, e)
-            | Async eventHandler -> 
-                Async.StartWithContinuations
-                    (computation = eventHandler v.Model, continuation = ignore, exceptionContinuation = (fun why -> error(why,e)), 
-                     cancellationContinuation = ignore))
-        |> Observer.preventReentrancy
-        |> hub.Subscribe
+        obs

@@ -50,6 +50,7 @@
     <None Include="paket.template" />
     <Compile Include="DerivedCollectionSourceView.fs" />
     <Compile Include="DragDrop.fs" />
+    <Compile Include="WpfApp.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FSharp.Qualia\FSharp.Qualia.fsproj">
