@@ -32,11 +32,9 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
     let error (why, event) = tracefn "%A %A" why event
     
     do 
-        let subscribe (e : IView<'Event>) = 
+        let subscribe (e : IObservable<'Event>) = 
 //            tracefn "COMPOSE %A" e
-            if not e.EventStreams.IsEmpty then
-                let merged = e.EventStreams.Merge()
-                merged.Subscribe hub |> ignore
+            e.Subscribe hub |> ignore
         v.composeViewEvent.Publish
         |> Observable.subscribe subscribe
         |> ignore
@@ -61,6 +59,5 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
                             cancellationContinuation = ignore))
             |> Observer.preventReentrancy
             |> hub.Subscribe
-        if not v.EventStreams.IsEmpty then
-            v.EventStreams.Merge().Subscribe hub |> ignore
+        v.MergedEventStreams |> Option.iter (fun x -> x.Subscribe hub |> ignore)
         obs

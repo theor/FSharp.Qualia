@@ -2,22 +2,36 @@
 
 open System
 open System.Collections.ObjectModel
+open System.Reactive
+open System.Reactive.Subjects
+open System.Reactive.Linq
+open System.Reactive.Threading
+open System.Reactive.Concurrency
 
 [<AbstractClass>]
 /// [omit]
 /// Base View type, parameterized with the Event type
 type IView<'Event>() = 
     /// event fired when a sub-view is composed
-    member val composeViewEvent = Event<IView<'Event>>()
+    member val composeViewEvent = Event<IObservable<'Event>>()
     
     /// Compose a subview in the current view
     member this.ComposeView<'SubView, 'SubModel when 'SubView :> IViewWithModel<'Event, 'SubModel>>(v : 'SubView) : 'SubView = 
         v.SetBindings v.Model
-        this.composeViewEvent.Trigger v
+        match v.MergedEventStreams with
+        | Some stream -> this.composeViewEvent.Trigger stream
+        | None -> ()
         v
+
+
     
     /// List of event observable sources, subscribed to by the dispatcher
     abstract EventStreams : IObservable<'Event> list
+    member x.MergedEventStreams =
+        if not x.EventStreams.IsEmpty then
+            Some (x.EventStreams.Merge())
+        else
+            None
 
 and [<AbstractClass>]
     /// [omit]
@@ -27,7 +41,14 @@ and [<AbstractClass>]
     member val Model : 'Model = m
     /// Will subscribe to the model's changed, typically on its ReactiveProperties
     abstract SetBindings : 'Model -> unit
-
+    member this.ComposeViewEvents<'SubView, 'SubModel, 'SubEvent
+        when 'SubView :> IViewWithModel<'SubEvent, 'SubModel>>
+        (v : 'SubView) (f: 'SubEvent -> 'Event) : 'SubView = 
+        v.SetBindings v.Model
+        match v.MergedEventStreams with
+        | Some stream -> this.composeViewEvent.Trigger (stream |> Observable.map f)
+        | None -> ()
+        v
 [<AbstractClass>]
 /// 
 type View<'Event, 'Element, 'Model>(elt : 'Element, m : 'Model) = 
