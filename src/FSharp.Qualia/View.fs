@@ -17,6 +17,7 @@ type IView<'Event>() =
     
     /// Compose a subview in the current view
     member this.ComposeView<'SubView, 'SubModel when 'SubView :> IViewWithModel<'Event, 'SubModel>>(v : 'SubView) : 'SubView = 
+        v.composeViewEvent.Publish.Add this.composeViewEvent.Trigger
         v.SetBindings v.Model
         match v.MergedEventStreams with
         | Some stream -> this.composeViewEvent.Trigger stream
@@ -44,6 +45,7 @@ and [<AbstractClass>]
     member this.ComposeViewEvents<'SubView, 'SubModel, 'SubEvent
         when 'SubView :> IViewWithModel<'SubEvent, 'SubModel>>
         (v : 'SubView) (f: 'SubEvent -> 'Event) : 'SubView = 
+        v.composeViewEvent.Publish.Add (fun x -> x |> Observable.map f |> this.composeViewEvent.Trigger)
         v.SetBindings v.Model
         match v.MergedEventStreams with
         | Some stream -> this.composeViewEvent.Trigger (stream |> Observable.map f)
