@@ -1,3 +1,6 @@
+#### 0.1.4 - August 19 2015
+* Fixed major bug with composed view not being subscribed to 
+
 #### 0.1.3 - August 14 2015
 * view composition with a different event type, aggregated in the main view event type
 
