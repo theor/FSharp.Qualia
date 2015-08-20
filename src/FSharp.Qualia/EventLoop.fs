@@ -20,6 +20,12 @@ type IDispatcher<'Event, 'Model> =
     /// Transforms an event in an event handler
     abstract Dispatcher : ('Event -> EventHandler<'Model>) with get
 
+module Dispatcher =
+    let fromHandler<'Event,'Model> f =
+        { new IDispatcher<'Event,'Model> with
+            member x.InitModel _ = ()
+            member x.Dispatcher = f }
+            
 //type Dispatcher<'Event, 'Model> = {
 //    InitModel : 'Model -> unit
 //    Dispatcher : ('Event -> EventHandler<'Model>)
