@@ -13,3 +13,4 @@ nuget FsXaml.Wpf
 nuget gong-wpf-dragdrop
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
+github fsprojects/Chessie src/Chessie/ErrorHandling.fs

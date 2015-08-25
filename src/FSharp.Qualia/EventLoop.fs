@@ -7,11 +7,11 @@ open System.Reactive.Threading
 open System.Reactive.Concurrency
 open System.Threading
 open System
-
+open Chessie.ErrorHandling
 /// Event handlers are either synchronous or asynchronous
 type EventHandler<'Model> = 
-    | Sync of ('Model -> unit)
-    | Async of ('Model -> Async<unit>)
+    | Sync of ('Model -> Result<unit,string>)
+    | Async of ('Model -> AsyncResult<unit,string>)
 
 /// Event dispatcher interface
 type IDispatcher<'Event, 'Model> = 
@@ -57,11 +57,11 @@ type EventLoop<'Model, 'Event, 'Element>(v : View<'Event, 'Element, 'Model>, c :
                 match c.Dispatcher e with
                 | Sync eventHandler -> 
                     try 
-                        f(fun () -> eventHandler v.Model)
+                        f(fun () -> eventHandler v.Model |> ignore)
                     with why -> error (why, e)
                 | Async eventHandler -> 
                     Async.StartWithContinuations
-                        (computation = eventHandler v.Model, continuation = ignore, exceptionContinuation = (fun why -> error(why,e)), 
+                        (computation = (eventHandler >> Async.ofAsyncResult) v.Model, continuation = ignore, exceptionContinuation = (fun why -> error(why,e)), 
                             cancellationContinuation = ignore))
             |> Observer.preventReentrancy
             |> hub.Subscribe
