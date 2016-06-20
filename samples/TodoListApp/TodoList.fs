@@ -36,9 +36,9 @@ type Model() =
     member val SelectedItem : ReactiveProperty<TodoItemModel option> = ReactiveProperty None
 
 
-type TodoListWindow = XAML< "TodoList.xaml", true >
+type TodoListWindow = XAML< "TodoList.xaml" >
 type TodoListView(mw : TodoListWindow, m) = 
-    inherit DerivedCollectionSourceView<TodoListEvents, Window, Model>(mw.Root, m)
+    inherit DerivedCollectionSourceView<TodoListEvents, Window, Model>(mw, m)
 
     let filter (m:Model) (x:TodoItem.View) =
         match m.FilteringType.Value with

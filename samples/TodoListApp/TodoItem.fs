@@ -4,7 +4,7 @@ open System.Windows
 open FsXaml
 open FSharp.Qualia
 open Types
-type Control = XAML< "TodoItem.xaml", true >
+type Control = XAML< "TodoItem.xaml">
     
 type View(m : TodoItemModel) as this = 
     inherit View<TodoListEvents, Control, TodoItemModel>(Control(), m)
