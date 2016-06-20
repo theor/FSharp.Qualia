@@ -141,7 +141,7 @@ Target "RunTests" (fun _ ->
             DisableShadowCopy = true
             TimeOut = TimeSpan.FromMinutes 20.
             OutputFile = "TestResults.xml"
-            ToolPath = @"packages\NUnit.ConsoleRunner\tools\"})
+            ToolPath = @"packages\NUnit.Runners\tools\"})
 )
 
 #if MONO
@@ -325,6 +325,7 @@ Target "All" DoNothing
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
+  ==> "RunTests"
   ==> "GenerateReferenceDocs"
   ==> "GenerateDocs"
   ==> "All"

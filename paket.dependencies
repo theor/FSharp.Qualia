@@ -2,12 +2,11 @@ source https://nuget.org/api/v2
 
 nuget FSharp.Core >= 4.0
 nuget FSharp.Formatting
-nuget NUnit 
-nuget NUnit.Runners
+nuget NUnit 2.6.4
+nuget NUnit.Runners 2.6.4
 nuget FAKE
 nuget SourceLink.Fake
 
-nuget Rx-Main
 nuget Rx-WPF
 nuget FsXaml.Wpf
 nuget gong-wpf-dragdrop
