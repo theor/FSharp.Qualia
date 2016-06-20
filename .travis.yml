@@ -3,5 +3,4 @@ language: csharp
 sudo: false  # use the new container-based Travis infrastructure 
 
 script: 
-  - mono ./.paket/paket.exe install
   - ./build.sh All
