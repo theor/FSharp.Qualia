@@ -110,7 +110,11 @@ Target "AssemblyInfo" (fun _ ->
 // But keeps a subdirectory structure for each project in the 
 // src folder to support multiple project outputs
 Target "CopyBinaries" (fun _ ->
+#if MONO
+    !! "src/FSharp.Qualia/*.??proj"
+#else
     !! "src/**/*.??proj"
+#endif
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) @@ "bin/Release", "bin" @@ (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
 )
