@@ -3,7 +3,15 @@ module NumericUpDownWinForms
 open System
 open System.Windows.Forms
 open FSharp.Qualia
-open NumericUpDown
+open Chessie.ErrorHandling
+
+type MainModel() = 
+    member val Value = new ReactiveProperty<int>(0)
+
+type MainEvents = 
+    | Up
+    | Down
+    | Edit of string
     
 type MainForm() =
     inherit Form()
@@ -37,6 +45,21 @@ type MainView(mw : MainForm, m) =
         m.Value.Add(fun v -> mw.Label.Text <- (string v))
         m.Value.Add(fun v -> mw.TextBox.Text <- (string v))
 
+type MainDispatcher() = 
+    let up (m : MainModel) = ok (m.Value.Value <- m.Value.Value + 1)
+    let down (m : MainModel) = ok (m.Value.Value <- m.Value.Value - 1)
+    let edit str (m : MainModel) = 
+        match Int32.TryParse str with
+        | true, i -> ok (m.Value.Value <- i)
+        | false, _ -> ok (())
+    
+    interface IDispatcher<MainEvents, MainModel> with
+        member this.InitModel _ = ()
+        member this.Dispatcher = 
+            function 
+            | Up -> Sync up
+            | Down -> Sync down
+            | Edit str -> Sync(edit str)
 
 let run() =
     let v = MainView(new MainForm(), MainModel())

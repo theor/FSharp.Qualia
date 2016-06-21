@@ -44,7 +44,11 @@ let authors = [ "theor" ]
 let tags = "ui wpf framework"
 
 // File system information 
+#if MONO
+let solutionFile  = "FSharp.Qualia.Mono.sln"
+#else
 let solutionFile  = "FSharp.Qualia.sln"
+#endif
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -141,7 +145,7 @@ Target "RunTests" (fun _ ->
             DisableShadowCopy = true
             TimeOut = TimeSpan.FromMinutes 20.
             OutputFile = "TestResults.xml"
-            ToolPath = @"packages\NUnit.Runners\tools\"})
+            ToolPath = "./packages/NUnit.Runners/tools/"})
 )
 
 #if MONO

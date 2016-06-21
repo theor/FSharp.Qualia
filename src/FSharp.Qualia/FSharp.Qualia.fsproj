@@ -4,8 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>0ea768ec-d373-4536-bdf8-8c8fe8073670</ProjectGuid>
+    <ProjectGuid>{0EA768EC-D373-4536-BDF8-8C8FE8073670}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FSharp.Qualia</RootNamespace>
     <AssemblyName>FSharp.Qualia</AssemblyName>
@@ -20,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>.\bin\Debug\FSharp.Qualia.xml</DocumentationFile>
@@ -30,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>.\bin\Release</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>.\bin\Release\FSharp.Qualia.xml</DocumentationFile>
