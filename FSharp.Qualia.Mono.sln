@@ -5,6 +5,8 @@ Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "FSharp.Qualia", "src\FSharp
 EndProject
 Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "NumericUpDownWinForms", "samples\NumericUpDownWinForms\NumericUpDownWinForms.fsproj", "{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}"
 EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "FSharp.Qualia.Tests", "tests\FSharp.Qualia.Tests\FSharp.Qualia.Tests.fsproj", "{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0EA768EC-D373-4536-BDF8-8C8FE8073670}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA768EC-D373-4536-BDF8-8C8FE8073670}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA768EC-D373-4536-BDF8-8C8FE8073670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D29FC626-CE75-4AAA-9E37-09DD32DBE6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU

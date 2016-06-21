@@ -4,8 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>8a6e3c46-3a60-4ac1-9614-e44a97f7f17b</ProjectGuid>
+    <ProjectGuid>{8A6E3C46-3A60-4AC1-9614-E44A97F7F17B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FSharp.Qualia.Tests</RootNamespace>
     <AssemblyName>FSharp.Qualia.Tests</AssemblyName>
@@ -62,18 +61,17 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="FSharp.Core">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FSharp.Qualia\FSharp.Qualia.fsproj">
       <Name>FSharp.Qualia</Name>
-      <Project>{0ea768ec-d373-4536-bdf8-8c8fe8073670}</Project>
-      <Private>True</Private>
+      <Project>{0EA768EC-D373-4536-BDF8-8C8FE8073670}</Project>
     </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -87,7 +85,6 @@
   <ItemGroup>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
