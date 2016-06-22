@@ -44,7 +44,11 @@ let authors = [ "theor" ]
 let tags = "ui wpf framework"
 
 // File system information 
+#if MONO
+let solutionFile  = "FSharp.Qualia.Mono.sln"
+#else
 let solutionFile  = "FSharp.Qualia.sln"
+#endif
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
@@ -106,7 +110,11 @@ Target "AssemblyInfo" (fun _ ->
 // But keeps a subdirectory structure for each project in the 
 // src folder to support multiple project outputs
 Target "CopyBinaries" (fun _ ->
+#if MONO
+    !! "src/FSharp.Qualia/*.??proj"
+#else
     !! "src/**/*.??proj"
+#endif
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) @@ "bin/Release", "bin" @@ (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
 )
@@ -140,7 +148,8 @@ Target "RunTests" (fun _ ->
         { p with
             DisableShadowCopy = true
             TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" })
+            OutputFile = "TestResults.xml"
+            ToolPath = "./packages/NUnit.Runners/tools/"})
 )
 
 #if MONO

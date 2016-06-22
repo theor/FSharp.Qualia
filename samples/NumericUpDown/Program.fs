@@ -6,6 +6,7 @@ open System.Windows.Threading
 open System.Threading
 open FSharp.Qualia
 open FsXaml
+open Chessie.ErrorHandling
 
 type MainModel() = 
     member val Value = new ReactiveProperty<int>(0)
@@ -15,10 +16,10 @@ type MainEvents =
     | Down
     | Edit of string
 
-type MainWindow = XAML<"MainWindow.xaml", true>   
+type MainWindow = XAML<"MainWindow.xaml">   
 
 type MainView(mw : MainWindow, m) = 
-    inherit View<MainEvents, Window, MainModel>(mw.Root, m)
+    inherit View<MainEvents, Window, MainModel>(mw, m)
     
     override this.EventStreams = 
         [ mw.buttonUp.Click |> Observable.mapTo Up
@@ -30,12 +31,12 @@ type MainView(mw : MainWindow, m) =
         m.Value.Add(fun v -> mw.textBox.Text <- (string v))
 
 type MainDispatcher() = 
-    let up (m : MainModel) = m.Value.Value <- m.Value.Value + 1
-    let down (m : MainModel) = m.Value.Value <- m.Value.Value - 1
+    let up (m : MainModel) = ok (m.Value.Value <- m.Value.Value + 1)
+    let down (m : MainModel) = ok (m.Value.Value <- m.Value.Value - 1)
     let edit str (m : MainModel) = 
         match Int32.TryParse str with
-        | true, i -> m.Value.Value <- i
-        | false, _ -> ()
+        | true, i -> ok (m.Value.Value <- i)
+        | false, _ -> ok (())
     
     interface IDispatcher<MainEvents, MainModel> with
         member this.InitModel _ = ()

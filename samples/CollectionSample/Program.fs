@@ -4,6 +4,7 @@ open FsXaml
 open FSharp.Qualia
 open FSharp.Qualia.WPF
 open System
+open Chessie.ErrorHandling
 
 type Events = Add
 
@@ -20,9 +21,9 @@ type ItemView(m) =
 type CollectionModel() =
     member val Items = new ObservableCollection<ItemModel>()
     
-type CollectionWindow = XAML<"CollectionWindow.xaml",true>
+type CollectionWindow = XAML<"CollectionWindow.xaml">
 type CollectionView(w:CollectionWindow,m) =
-    inherit DerivedCollectionSourceView<Events, Window, CollectionModel>(w.Root, m)
+    inherit DerivedCollectionSourceView<Events, Window, CollectionModel>(w, m)
     
     member val ItemsCollectionView:ComponentModel.ICollectionView = null with get,set
 
@@ -37,7 +38,7 @@ type CollectionController() =
         member this.InitModel m = ()
         member this.Dispatcher = 
             function
-            | Add -> Sync (fun m -> m.Items.Add (ItemModel(sprintf "Item #%i" m.Items.Count)))
+            | Add -> Sync (fun m -> ok (m.Items.Add (ItemModel(sprintf "Item #%i" m.Items.Count))))
 
 
 
@@ -53,4 +54,4 @@ let main argv =
     let c = CollectionController()
     let loop = EventLoop(v, c)
     use l = loop.Start()
-    app.Run(w.Root)
+    app.Run(w)
